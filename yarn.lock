@@ -1194,6 +1194,21 @@
     uuid "^8.0.0"
     vscode-languageserver-textdocument "^1.0.1"
 
+"@theia/keymaps@latest":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@theia/keymaps/-/keymaps-1.6.0.tgz#bf0ed0ac16fa5da8942bfbf9d086f2f1ce72bd31"
+  integrity sha512-0QAksJlGRhWsJmX2S5lC1KGgqhGgpUPSg3jUAPHtgD3CZPCpHAmBcARHBcXbKX1E603p1aZ7BXNsEAwKwdvGAQ==
+  dependencies:
+    "@theia/core" "^1.6.0"
+    "@theia/monaco" "^1.6.0"
+    "@theia/userstorage" "^1.6.0"
+    "@theia/workspace" "^1.6.0"
+    "@types/lodash.debounce" "4.0.3"
+    ajv "^6.5.3"
+    fuzzy "^0.1.3"
+    jsonc-parser "^2.2.0"
+    lodash.debounce "^4.0.8"
+
 "@theia/markers@^1.6.0", "@theia/markers@latest":
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/@theia/markers/-/markers-1.6.0.tgz#824f4611c03b85f9b6b18145d8dd7bdf0375f49f"

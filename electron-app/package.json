@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "electron-app",
+  "name": "localizer",
   "version": "0.0.0",
   "dependencies": {
     "@theia/core": "latest",
@@ -15,7 +15,8 @@
     "@theia/process": "latest",
     "@theia/terminal": "latest",
     "@theia/workspace": "latest",
-    "@localizer/core": "0.0.0"
+    "@localizer/core": "0.0.0",
+    "@localizer/branding": "0.0.0"
   },
   "devDependencies": {
     "@theia/cli": "latest"
