@@ -1,5 +1,6 @@
 {
     "name": "@localizer/branding",
+    "license": "EPL-2.0",
     "keywords": [
       "theia-extension"
     ],

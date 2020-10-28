@@ -15,8 +15,12 @@
     "@theia/process": "latest",
     "@theia/terminal": "latest",
     "@theia/workspace": "latest",
+    "@theia/plugin-ext-vscode": "latest",
+    "@theia/plugin-ext": "latest",
+    "@theia/mini-browser": "latest",
     "@localizer/branding": "0.0.0",
-    "@localizer/core": "0.0.0"
+    "@localizer/core": "0.0.0",
+    "@localizer/arb_lsp": "0.0.0"
   },
   "devDependencies": {
     "@theia/cli": "latest"
@@ -28,5 +32,9 @@
   },
   "theia": {
     "target": "electron"
+  },
+  "theiaPluginsDir": "plugins",
+  "theiaPlugins": {
+    "arb_lsp": "https://github.com/theia-ide/vscode-builtin-extensions/releases/download/v1.39.1-prel/java-1.39.1-prel.vsix"
   }
 }

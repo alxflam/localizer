@@ -1,0 +1,23 @@
+{
+  "name": "@localizer/arb_lsp-server",
+  "description": "ARB LSP Server",
+  "version": "1.0.0",
+  "author": {
+    "name": "Vincent Fugnitto",
+    "email": "vincent.fugnitto@ericsson.com",
+    "url": "https://github.com/vince-fugnitto"
+  },
+  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vince-fugnitto/cryptodetector"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^6.1.1",
+    "vscode-languageserver-textdocument": "^1.0.1"
+  },
+  "scripts": {}
+}

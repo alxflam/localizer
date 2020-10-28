@@ -1,0 +1,69 @@
+{
+  "name": "@localizer/arb_lsp",
+  "description": "LSP support for ARB files",
+  "version": "0.0.0",
+  "license": "EPL-2.0",
+  "publisher": "localizer",
+  "engines": {
+    "vscode": "^1.40.0"
+  },
+  "author": {
+    "name": "Alexander Flammer",
+    "email": "a@f.com",
+    "url": "https://github.com/alex0711"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alex0711/localizer"
+  },
+  "categories": [],
+  "keywords": [],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./client/out/extension",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Example configuration",
+      "properties": {
+        "languageServerExample.maxNumberOfProblems": {
+          "scope": "resource",
+          "type": "number",
+          "default": 100,
+          "description": "Controls the maximum number of problems produced by the server."
+        },
+        "languageServerExample.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the language server."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "prepare": "yarn lint",
+    "vscode:prepublish": "cd client && cd .. && npm run compile",
+    "compile": "tsc -b",
+    "watch": "tsc -b -w",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "lint": "node --max-old-space-size=4096 ../node_modules/eslint/bin/eslint.js \"**/*.{ts,tsx}\""
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.12.0",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/eslint-plugin-tslint": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "eslint": "^6.4.0",
+    "mocha": "^6.2.2",
+    "tslint": "^5.12.0",
+    "typescript": "^3.8.3"
+  }
+}

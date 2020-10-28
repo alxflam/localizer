@@ -1,5 +1,6 @@
 {
   "name": "@localizer/core",
+  "license": "EPL-2.0",
   "keywords": [
     "theia-extension"
   ],
@@ -9,7 +10,8 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "latest"
+    "@theia/core": "latest",
+    "@theia/mini-browser": "latest"
   },
   "devDependencies": {
     "rimraf": "latest",
@@ -23,7 +25,8 @@
   },
   "theiaExtensions": [
     {
-      "frontend": "lib/browser/core-frontend-module"
+      "frontend": "lib/browser/core-frontend-module",
+      "backend": "lib/node/core-backend-module"
     }
   ]
 }
