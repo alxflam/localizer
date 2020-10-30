@@ -1,23 +1,15 @@
-import { WidgetOpenerOptions, WidgetOpenHandler } from "@theia/core/lib/browser";
+import { NavigatableWidgetOpenHandler } from "@theia/core/lib/browser";
 import URI from "@theia/core/lib/common/uri";
 import { injectable, inject } from "inversify";
 import { EditorManager } from "@theia/editor/lib/browser";
 import { ArbFileWidget } from "./arb-file-widget";
 
 @injectable()
-export class ArbFileOpenHandler extends WidgetOpenHandler<ArbFileWidget> {
+export class ArbFileOpenHandler extends NavigatableWidgetOpenHandler<ArbFileWidget> {
 
-    protected createWidgetOptions(uri: URI, options?: WidgetOpenerOptions): Object {
-       if (options) {
-           return options
-       }
-       console.log('no options provided!')
-       return {}
-    }
-    
     readonly id = ArbFileWidget.id;
-    readonly label = "Form";
-
+    readonly label = "Translation";  
+  
     @inject(EditorManager)
     protected readonly editorManager: EditorManager;
 

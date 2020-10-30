@@ -1,20 +1,28 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { injectable, inject, postConstruct } from "inversify";
-import { BaseWidget, LabelProvider, Message } from "@theia/core/lib/browser";
+import { BaseWidget, LabelProvider, Message, NavigatableWidget } from "@theia/core/lib/browser";
 import URI from "@theia/core/lib/common/uri";
 import { MonacoTextModelService } from "@theia/monaco/lib/browser/monaco-text-model-service";
 import { MonacoEditorModel } from "@theia/monaco/lib/browser/monaco-editor-model";
 import { Disposable, Reference } from "@theia/core";
 import { ArbFileView } from "./arb-file-view";
 
-export const ArbFileWidgetOptions = Symbol('ArbFileWidgetOptions');
-export interface ArbFileWidgetOptions {
+@injectable()
+export class ArbFileWidgetOptions {
     uri: URI
 }
 
 @injectable()
-export class ArbFileWidget extends BaseWidget {
+export class ArbFileWidget extends BaseWidget implements NavigatableWidget {
+    
+    getResourceUri(): URI | undefined {
+        return this.options.uri;
+    }
+
+    createMoveToUri(resourceUri: URI): URI | undefined {
+        return this.options.uri && this.options.uri.withPath(resourceUri.path);
+    }
 
     static id = 'arb-file-widget';
 
@@ -34,8 +42,8 @@ export class ArbFileWidget extends BaseWidget {
     protected async init(): Promise<void> {
         const { uri } = this.options;
         this.id = ArbFileWidget.id + ':' + uri.toString()
-        // TODO: title should be the file name
-        this.title.label = 'ARB ' + this.labelProvider.getName(uri);
+        const name = this.labelProvider.getName(uri);
+        this.title.label = 'Translate: ' + name;
         this.title.closable = true;
         
         this.scrollOptions = {};

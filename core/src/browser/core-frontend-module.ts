@@ -4,7 +4,7 @@
 import { ContainerModule, injectable } from 'inversify';
 import { CoreContribution } from './core-contribution';
 import { CommandContribution} from '@theia/core';
-import { FrontendApplicationContribution, OpenHandler, WebSocketConnectionProvider, WidgetFactory } from "@theia/core/lib/browser";
+import { FrontendApplicationContribution, NavigatableWidgetOptions, OpenHandler, WebSocketConnectionProvider, WidgetFactory } from "@theia/core/lib/browser";
 import { LocalizerCoreBackendClient, LocalizerCoreBackendWithClientService, LocalizerCoreBackendService, LOCALIZER_CORE_BACKEND_PATH, LOCALIZER_CORE_BACKEND_WITH_CLIENT_PATH } from '../common/protocol';
 import { BackendSampleCommandContribution} from './core-services-contribution';
 import { ArbFileOpenHandler } from './arb-open-handler';
@@ -32,18 +32,33 @@ export default new ContainerModule(bind => {
     }).inSingletonScope();
 
     //custom widget for editing a single arb file
-    bind(OpenHandler).to(ArbFileOpenHandler).inSingletonScope();
-    bind(WidgetFactory).toDynamicValue(({ container }) => ({
+    bind(ArbFileOpenHandler).toSelf().inSingletonScope();
+    bind(OpenHandler).toService(ArbFileOpenHandler);
+    bind(ArbFileWidget).toSelf();
+
+    bind(WidgetFactory).toDynamicValue(context => ({
         id: ArbFileWidget.id,
-        createWidget: (uri: string) => {
+        async createWidget(options: NavigatableWidgetOptions): Promise<ArbFileWidget> {
+            const { container } = context;
             const child = container.createChild();
-            child.bind(ArbFileWidgetOptions).toConstantValue({
-                uri: new URI(uri)
-            });
-            child.bind(ArbFileWidget).toSelf();
+            const uri = new URI(options.uri);
+            child.bind(ArbFileWidgetOptions).toConstantValue({ uri });
             return child.get(ArbFileWidget);
         }
-    }));
+    })).inSingletonScope();
+
+    // bind(WidgetFactory).toDynamicValue(({ container }) => ({
+    //     id: ArbFileWidget.id,
+    //     createWidget: (options: NavigatableWidgetOptions) => {
+    //         const child = container.createChild();
+    //         debugger
+    //         child.bind(ArbFileWidgetOptions).toConstantValue({
+    //             uri: new URI(options.uri)
+    //         });
+    //         child.bind(ArbFileWidget).toSelf();
+    //         return child.get(ArbFileWidget);
+    //     }
+    // }));
 });
 
 @injectable()
