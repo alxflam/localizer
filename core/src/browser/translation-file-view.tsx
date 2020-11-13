@@ -5,12 +5,15 @@ import { MonacoTextModelService } from "@theia/monaco/lib/browser/monaco-text-mo
 import { MonacoEditorModel } from "@theia/monaco/lib/browser/monaco-editor-model";
 import { DisposableCollection } from "@theia/core";
 import { ReferencedModelStorage } from "./referenced-model-storage";
+// import { ArbFileParser } from "../../../arb/src/browser/arb-file-parser";
+import { ITranslationEntry } from "../common/translation-types";
+import { TranslationResourceParser } from "../common/parser";
 
-export class ArbFileView extends React.Component<ArbFileView.Props, ArbFileView.State> {
+export class TranslationFileView extends React.Component<TranslationFileView.Props, TranslationFileView.State> {
 
     protected readonly schemaStorage: ReferencedModelStorage<JSONSchema6>;
 
-    constructor(props: ArbFileView.Props) {
+    constructor(props: TranslationFileView.Props) {
         super(props);
         this.state = {
             schema: {
@@ -23,8 +26,28 @@ export class ArbFileView extends React.Component<ArbFileView.Props, ArbFileView.
     }
 
     render(): JSX.Element | null {
+        const { formData } = this.state;
+        // once componentDidMount got fired we'll have the file content
+        // then just parse it
+        // and display a form for each entry
+        // enhance model: add line to each key entry
+        var entries: ITranslationEntry[] = []
+        if (formData) {
+            entries = this.props.parser.parseByContent(formData);
+        }
         return <>
-            <h1>ARB File Content</h1>
+            {entries.map((value, index) => {
+                return (
+                    <div key={index}>
+                        <h3>{value.key}</h3>
+                        <input
+                            key={value.key}
+                            className="form-control"
+                            value={value.value} />
+                        <p>{value.description?.description}</p>
+                    </div>
+                );
+            })}
         </>;
     }
 
@@ -44,13 +67,17 @@ export class ArbFileView extends React.Component<ArbFileView.Props, ArbFileView.
     }
 
     protected readonly toDispose = new DisposableCollection();
-    componentWillMount(): void {
+
+    componentDidMount(): void {
         this.toDispose.push(this.schemaStorage);
         this.toDispose.push(this.schemaStorage.onDidChange(schema => this.setState({ schema })));
 
         this.reconcileFormData();
         this.toDispose.push(this.props.model.onDidChangeContent(() => this.reconcileFormData()));
     }
+
+    // componentWillMount(): void {
+    // }
     componentWillUnmount(): void {
         this.toDispose.dispose();
     }
@@ -65,10 +92,11 @@ export class ArbFileView extends React.Component<ArbFileView.Props, ArbFileView.
     }
 
 }
-export namespace ArbFileView {
+export namespace TranslationFileView {
     export interface Props {
         model: MonacoEditorModel
         modelService: MonacoTextModelService
+        parser: TranslationResourceParser
     }
     export interface State {
         schema: JSONSchema6

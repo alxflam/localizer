@@ -6,28 +6,24 @@ import URI from "@theia/core/lib/common/uri";
 import { MonacoTextModelService } from "@theia/monaco/lib/browser/monaco-text-model-service";
 import { MonacoEditorModel } from "@theia/monaco/lib/browser/monaco-editor-model";
 import { Disposable, Reference } from "@theia/core";
-import { ArbFileView } from "./arb-file-view";
+import { TranslationFileView } from "./translation-file-view";
+import { TranslationManager } from "./translation-contribution-manager";
 
 @injectable()
-export class ArbFileWidgetOptions {
+export class TranslationFileWidgetOptions {
     uri: URI
 }
 
 @injectable()
-export class ArbFileWidget extends BaseWidget implements NavigatableWidget {
+export class TranslationFileWidget extends BaseWidget implements NavigatableWidget {
     
-    getResourceUri(): URI | undefined {
-        return this.options.uri;
-    }
+    static id = 'translation-file-widget';
 
-    createMoveToUri(resourceUri: URI): URI | undefined {
-        return this.options.uri && this.options.uri.withPath(resourceUri.path);
-    }
+    @inject(TranslationManager)
+    protected readonly translationSupport: TranslationManager;
 
-    static id = 'arb-file-widget';
-
-    @inject(ArbFileWidgetOptions)
-    protected readonly options: ArbFileWidgetOptions;
+    @inject(TranslationFileWidgetOptions)
+    protected readonly options: TranslationFileWidgetOptions;
 
     @inject(LabelProvider)
     protected readonly labelProvider: LabelProvider
@@ -41,7 +37,7 @@ export class ArbFileWidget extends BaseWidget implements NavigatableWidget {
     @postConstruct()
     protected async init(): Promise<void> {
         const { uri } = this.options;
-        this.id = ArbFileWidget.id + ':' + uri.toString()
+        this.id = TranslationFileWidget.id + ':' + uri.toString()
         const name = this.labelProvider.getName(uri);
         this.title.label = 'Translate: ' + name;
         this.title.closable = true;
@@ -58,6 +54,7 @@ export class ArbFileWidget extends BaseWidget implements NavigatableWidget {
             reference.dispose();
             return;
         }
+
         this.toDispose.push(this.reference = reference);
         this.update();
     }
@@ -65,7 +62,17 @@ export class ArbFileWidget extends BaseWidget implements NavigatableWidget {
     protected onUpdateRequest(message: Message): void {
         super.onUpdateRequest(message);
         const model = this.reference && this.reference.object;
-        ReactDOM.render(model ? <ArbFileView model={model} modelService={this.modelService} /> : null!, this.viewNode);
+        ReactDOM.render(model ? <TranslationFileView model={model} modelService={this.modelService} 
+                parser={this.translationSupport.getTranslationSupportForURI(this.options.uri).getParser()} 
+            /> : null!, this.viewNode);
+    }
+
+    getResourceUri(): URI | undefined {
+        return this.options.uri;
+    }
+
+    createMoveToUri(resourceUri: URI): URI | undefined {
+        return this.options.uri && this.options.uri.withPath(resourceUri.path);
     }
 
 }

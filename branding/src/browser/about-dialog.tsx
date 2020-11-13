@@ -7,7 +7,7 @@ import { injectable } from 'inversify';
 export class CustomAboutDialog extends AboutDialog {
 
     /**
-     * Customize `renderHeader` to print out some more information about the app.
+     * Customized `renderHeader` to print out some background information about the app.
      */
     protected renderHeader(): React.ReactNode {
         const appInfo = this.applicationInfo;
@@ -15,7 +15,7 @@ export class CustomAboutDialog extends AboutDialog {
         return <>
             {title}
             <p>Localizer is a development tool for the translation of texts.</p>
-            <p>It is distributed as Open Source Software under Terms of the MIT License.</p>
+            <p>It is distributed as Open Source Software under Terms of the EPL-V2 License.</p>
             <p>Based upon Theia, React and Electron.</p>
         </>;
 

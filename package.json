@@ -9,6 +9,11 @@
     "lerna": "2.4.0"
   },
   "workspaces": [
-    "branding", "core", "arb_lsp", "browser-app", "electron-app"
+    "arb",
+    "branding",
+    "core",
+    "arb_lsp",
+    "browser-app",
+    "electron-app"
   ]
 }
