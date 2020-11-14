@@ -20,7 +20,8 @@
     "@theia/mini-browser": "latest",
     "@localizer/branding": "0.0.0",
     "@localizer/core": "0.0.0",
-    "@localizer/arb": "0.0.0"
+    "@localizer/arb": "0.0.0",
+    "sample": "0.0.0"
   },
   "devDependencies": {
     "@theia/cli": "latest"
