@@ -1,11 +1,11 @@
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
 import { injectable, inject, postConstruct } from 'inversify';
-import { TranslationNavigatorTree, TranslationTreeNode } from './translation-navigator-tree';
-import { TranslationTreeModel } from './translation-tree-model';
+import { TranslationNavigatorTree, TranslationTreeRootNode } from './translation-navigator-tree';
+import { TranslationTreeModel } from '../translation-tree-model';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
 import { CompositeTreeNode, ExpandableTreeNode, SelectableTreeNode, TreeNode } from '@theia/core/lib/browser';
 import { ProgressService } from '@theia/core';
-import { TranslationManager } from './translation-contribution-manager';
+import { TranslationManager } from '../translation-contribution-manager';
 
 @injectable()
 export class TranslationNavigatorModel extends TranslationTreeModel {
@@ -69,7 +69,7 @@ export class TranslationNavigatorModel extends TranslationTreeModel {
             // then check if there are translation nodes
             const groups = this.translationManager.getTranslationGroups();
 
-            const node = TranslationTreeNode.createRoot();
+            const node = TranslationTreeRootNode.createRoot();
             for (const group of groups) {
                 node.children.push(await this.tree.createTranslationGroupRoot(group, node))
             }

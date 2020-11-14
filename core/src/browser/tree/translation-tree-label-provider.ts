@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { LabelProviderContribution, DidChangeLabelEvent, LabelProvider } from '@theia/core/lib/browser/label-provider';
 import { TreeLabelProvider } from '@theia/core/lib/browser/tree/tree-label-provider';
-import { TranslationGroupRootNode } from './translation-navigator-tree';
+import { TranslationGroupRootNode, TranslationKeyNode } from './translation-navigator-tree';
 
 @injectable()
 export class TranslationTreeLabelProvider implements LabelProviderContribution {
@@ -13,7 +13,7 @@ export class TranslationTreeLabelProvider implements LabelProviderContribution {
     protected readonly treeLabelProvider: TreeLabelProvider;
 
     canHandle(element: object): number {
-        return TranslationGroupRootNode.is(element) ?
+        return TranslationGroupRootNode.is(element) || TranslationKeyNode.is(element) ?
             this.treeLabelProvider.canHandle(element) + 1 :
             0;
     }

@@ -4,23 +4,21 @@
 import { ContainerModule, injectable, interfaces } from 'inversify';
 import { CoreContribution } from './core-contribution';
 import { bindContributionProvider, CommandContribution, MenuPath } from '@theia/core';
-import { bindViewContribution, defaultTreeProps, FrontendApplicationContribution, NavigatableWidgetOptions, OpenHandler, Tree, TreeImpl, TreeModel, TreeModelImpl, TreeProps, TreeWidget, ViewContainer, WebSocketConnectionProvider, WidgetFactory, WidgetManager } from "@theia/core/lib/browser";
+import { bindViewContribution, defaultTreeProps, FrontendApplicationContribution, LabelProviderContribution, NavigatableWidgetOptions, OpenHandler, Tree, TreeModel, TreeProps, ViewContainer, WebSocketConnectionProvider, WidgetFactory, WidgetManager } from "@theia/core/lib/browser";
 import { LocalizerCoreBackendClient, LocalizerCoreBackendWithClientService, LocalizerCoreBackendService, LOCALIZER_CORE_BACKEND_PATH, LOCALIZER_CORE_BACKEND_WITH_CLIENT_PATH } from '../common/protocol';
 import { BackendSampleCommandContribution } from './core-services-contribution';
 import { TranslationFileOpenHandler } from './translation-file-open-handler';
 import { TranslationFileWidget, TranslationFileWidgetOptions } from './translation-file-widget';
 import URI from '@theia/core/lib/common/uri';
-import { TranslationNavigatorContribution } from './translation-navigator-contribution';
+import { TranslationNavigatorContribution } from './tree/translation-navigator-contribution';
 import { TabBarToolbarContribution } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
-import { TranslationNavigatorWidget, TRANSLATION_NAVIGATOR_ID, TRANSLATION_VIEW_CONTAINER_ID, TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS } from './translation-navigator-widget';
-import { TranslationTreeModel } from './translation-tree-model';
-import { TranslationTree } from './translation-tree';
-import { TranslationTreeWidget } from './translation-tree-widget';
-import { TranslationNavigatorModel } from './translation-navigator-model';
-import { TranslationNavigatorTree } from './translation-navigator-tree';
-import { createTreeContainer } from '@theia/core/lib/browser/tree';
+import { TranslationNavigatorWidget, TRANSLATION_NAVIGATOR_ID, TRANSLATION_VIEW_CONTAINER_ID, TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS } from './tree/translation-navigator-widget';
+import { TranslationNavigatorModel } from './tree/translation-navigator-model';
+import { TranslationNavigatorTree } from './tree/translation-navigator-tree';
+import { createTreeContainer, TreeImpl, TreeModelImpl, TreeWidget } from '@theia/core/lib/browser/tree';
 import { TranslationSupport } from './translation-support';
 import { TranslationManager } from './translation-contribution-manager';
+import { TranslationTreeLabelProvider } from './tree/translation-tree-label-provider';
 
 export default new ContainerModule(bind => {
     // frontend contribution
@@ -52,13 +50,13 @@ export default new ContainerModule(bind => {
         }
     })).inSingletonScope();
 
-    // bind custom tabbar for translation navigator tree
+    // bind custom view contribution for translation navigator tree
     bindViewContribution(bind, TranslationNavigatorContribution);
     bind(FrontendApplicationContribution).toService(TranslationNavigatorContribution);
     bind(TabBarToolbarContribution).toService(TranslationNavigatorContribution);
 
-    // bind(TranslationTreeLabelProvider).toSelf().inSingletonScope();
-    // bind(LabelProviderContribution).toService(TranslationTreeLabelProvider);
+    bind(TranslationTreeLabelProvider).toSelf().inSingletonScope();
+    bind(LabelProviderContribution).toService(TranslationTreeLabelProvider);
 
     bind(TranslationNavigatorWidget).toDynamicValue(ctx =>
         createTranslationNavigatorWidget(ctx.container)
@@ -74,7 +72,7 @@ export default new ContainerModule(bind => {
         createWidget: async () => {
             const viewContainer = container.get<ViewContainer.Factory>(ViewContainer.Factory)({
                 id: TRANSLATION_VIEW_CONTAINER_ID,
-                progressLocationId: 'explorer'
+                progressLocationId: 'translation'
             });
             viewContainer.setTitleOptions(TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS);
             const widget = await container.get(WidgetManager).getOrCreateWidget(TRANSLATION_NAVIGATOR_ID);
@@ -119,45 +117,24 @@ function bindBackenddService(bind: interfaces.Bind) {
 }
 
 export function createTranslationNavigatorWidget(parent: interfaces.Container): TranslationNavigatorWidget {
-    return createTranslationNavigatorContainer(parent).get(TranslationNavigatorWidget);
-}
-
-export function createTranslationTreeContainer(parent: interfaces.Container): interfaces.Container {
-    const child = createTreeContainer(parent);
-    // const child = parent;
-    child.unbind(TreeImpl);
-    child.bind(TranslationTree).toSelf();
-    child.rebind(Tree).toService(TranslationTree);
-
-    child.unbind(TreeModelImpl);
-    child.bind(TranslationTreeModel).toSelf();
-    child.rebind(TreeModel).toService(TranslationTreeModel);
-
-    child.unbind(TreeWidget);
-    child.bind(TranslationTreeWidget).toSelf();
-
-    return child;
+    return createTranslationNavigatorContainer(parent).get<TranslationNavigatorWidget>(TranslationNavigatorWidget);
 }
 
 export function createTranslationNavigatorContainer(parent: interfaces.Container): interfaces.Container {
-    const child = createTranslationTreeContainer(parent);
+    const child = createTreeContainer(parent);
 
-    // child.unbind(TranslationTree);
+    child.unbind(TreeImpl);
     child.bind(TranslationNavigatorTree).toSelf();
     child.rebind(Tree).toService(TranslationNavigatorTree);
 
-    // child.unbind(TranslationTreeModel);
+    child.unbind(TreeModelImpl);
     child.bind(TranslationNavigatorModel).toSelf();
     child.rebind(TreeModel).toService(TranslationNavigatorModel);
 
-    // child.unbind(TranslationTreeWidget);
     child.bind(TranslationNavigatorWidget).toSelf();
+    child.rebind(TreeWidget).toService(TranslationNavigatorWidget);
 
-    child.rebind(TreeProps).toConstantValue(TRANSLATION_NAVIGATOR_PROPS);
-
-    // child.bind(NavigatorDecoratorService).toSelf().inSingletonScope();
-    // child.rebind(TreeDecoratorService).toService(NavigatorDecoratorService);
-    // bindContributionProvider(child, NavigatorTreeDecorator);
+    // child.rebind(TreeProps).toConstantValue(TRANSLATION_NAVIGATOR_PROPS);
 
     return child;
 }

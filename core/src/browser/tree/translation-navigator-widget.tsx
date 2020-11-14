@@ -1,6 +1,5 @@
 import { injectable, inject, postConstruct } from 'inversify';
-import { ContextMenuRenderer, TreeProps, ViewContainerTitleOptions, ApplicationShell, TreeModel } from '@theia/core/lib/browser';
-import { TranslationTreeWidget } from './translation-tree-widget';
+import { ContextMenuRenderer, TreeProps, ViewContainerTitleOptions, ApplicationShell, TreeModel, TreeWidget, ExpandableTreeNode, TreeNode } from '@theia/core/lib/browser';
 import { TranslationNavigatorModel } from './translation-navigator-model';
 import { SelectionService } from '@theia/core';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
@@ -19,7 +18,7 @@ export const LABEL = 'No translation files available';
 export const CLASS = 'localizer-Translation';
 
 @injectable()
-export class TranslationNavigatorWidget extends TranslationTreeWidget {
+export class TranslationNavigatorWidget extends TreeWidget {
 
 
     constructor(
@@ -53,6 +52,11 @@ export class TranslationNavigatorWidget extends TranslationTreeWidget {
         return <div className='theia-navigator-container'>
             <div className='center'>You have not yet opened a workspace.</div>
         </div>;
+    }
+ 
+    protected isExpandable(node: TreeNode): node is ExpandableTreeNode {
+        // TODO: check if root, then true, else if has children
+        return true;
     }
 
 }
