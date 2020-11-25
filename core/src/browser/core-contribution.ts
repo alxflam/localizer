@@ -5,7 +5,7 @@ import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { EditorWidget } from '@theia/editor/lib/browser';
 import { MonacoEditor } from '@theia/monaco/lib/browser/monaco-editor';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
-import { TranslationFileOpenHandler } from './translation-file-open-handler';
+import { TranslationFileOpenHandler } from './file-view/translation-file-open-handler';
 import { ProblemManager } from '@theia/markers/lib/browser/problem/problem-manager';
 // import { DiagnosticSeverity } from 'vscode-languageserver-types';
 import { FileStat } from '@theia/filesystem/lib/common/files';

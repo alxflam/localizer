@@ -43,7 +43,7 @@ export class TranslationNavigatorContribution extends AbstractViewContribution<T
     ) {
         super({
             widgetId: TRANSLATION_NAVIGATOR_ID,
-            widgetName: 'Translation',
+            widgetName: 'Translation Navigator',
             defaultWidgetOptions: {
                 area: 'left',
                 rank: 300

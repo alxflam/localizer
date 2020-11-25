@@ -11,7 +11,6 @@ import { ITranslationEntry } from '@localizer/core/lib/common/translation-types'
 import { ITranslationManager } from '@localizer/core/lib/browser/translation-manager';
 import { ITranslationTreeNodeData, TranslationGroup } from '@localizer/core/src/common/translation-types';
 
-
 interface valueType {
     uri: URI
     fileStat: FileStat

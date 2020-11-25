@@ -1,15 +1,9 @@
-/**
- * Generated using theia-extension-generator
- */
-import { ContainerModule, injectable, interfaces } from 'inversify';
+import { ContainerModule, interfaces } from 'inversify';
 import { CoreContribution } from './core-contribution';
-import { bindContributionProvider, CommandContribution, MenuPath } from '@theia/core';
-import { bindViewContribution, defaultTreeProps, FrontendApplicationContribution, LabelProviderContribution, NavigatableWidgetOptions, OpenHandler, Tree, TreeModel, TreeProps, WebSocketConnectionProvider, WidgetFactory } from "@theia/core/lib/browser";
-import { LocalizerCoreBackendClient, LocalizerCoreBackendWithClientService, LocalizerCoreBackendService, LOCALIZER_CORE_BACKEND_PATH, LOCALIZER_CORE_BACKEND_WITH_CLIENT_PATH } from '../common/protocol';
-import { BackendSampleCommandContribution } from './core-services-contribution';
-import { TranslationFileOpenHandler } from './translation-file-open-handler';
-import { TranslationFileWidget, TranslationFileWidgetOptions } from './translation-file-widget';
-import URI from '@theia/core/lib/common/uri';
+import { bindContributionProvider, MenuPath } from '@theia/core';
+import { bindViewContribution, defaultTreeProps, FrontendApplicationContribution, LabelProviderContribution, NavigatableWidgetOptions, OpenHandler, Tree, TreeModel, TreeProps, WidgetFactory } from "@theia/core/lib/browser";
+import { TranslationFileOpenHandler } from './file-view/translation-file-open-handler';
+import { TranslationFileWidget, TranslationFileWidgetOptions } from './file-view/translation-file-widget';
 import { TranslationNavigatorContribution } from './tree/translation-navigator-contribution';
 import { TabBarToolbarContribution } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
 import { TranslationNavigatorWidget, TRANSLATION_NAVIGATOR_ID } from './tree/translation-navigator-widget';
@@ -19,14 +13,14 @@ import { createTreeContainer, TreeImpl, TreeModelImpl, TreeWidget } from '@theia
 import { TranslationSupport } from './translation-support';
 import { TranslationManager } from './translation-contribution-manager';
 import { TranslationTreeLabelProvider } from './tree/translation-tree-label-provider';
+import { TranslationViewWidget, TranslationViewWidgetOptions, TRANSLATION_VIEW_ID } from './translation-view/translation-view-widget';
+import URI from '@theia/core/lib/common/uri';
+import { TranslationViewContribution } from './translation-view/translation-view-contribution';
 
 export default new ContainerModule(bind => {
     // frontend contribution
     bind(CoreContribution).toSelf().inSingletonScope();
     bind(FrontendApplicationContribution).toService(CoreContribution);
-
-    // backend contribution
-    bindBackenddService(bind);
 
     // bind a manager for easy retrieval of the active contribution manager
     bind(TranslationManager).toSelf().inSingletonScope();
@@ -56,40 +50,30 @@ export default new ContainerModule(bind => {
 
     bind(TranslationTreeLabelProvider).toSelf().inSingletonScope();
     bind(LabelProviderContribution).toService(TranslationTreeLabelProvider);
-
-    // bind(TranslationNavigatorWidget).toDynamicValue(ctx =>
-    //     createTranslationNavigatorWidget(ctx.container)
-    // );
     
     bind(WidgetFactory).toDynamicValue(({ container }) => ({
         id: TRANSLATION_NAVIGATOR_ID,
         createWidget: () => createTranslationNavigatorWidget(container)
     })).inSingletonScope();
-    
-    // bind(WidgetFactory).toDynamicValue(({ container }) => ({
-    //     id: TRANSLATION_VIEW_CONTAINER_ID,
-    //     createWidget: async () => {
-    //         const viewContainer = container.get<ViewContainer.Factory>(ViewContainer.Factory)({
-    //             id: TRANSLATION_VIEW_CONTAINER_ID,
-    //             progressLocationId: 'translation'
-    //         });
-    //         viewContainer.setTitleOptions(TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS);
-    //         const widget = await container.get(WidgetManager).getOrCreateWidget(TRANSLATION_NAVIGATOR_ID);
-    //         viewContainer.addWidget(widget, {
-    //             canHide: false,
-    //             initiallyCollapsed: false
-    //         });
-    //         return viewContainer;
-    //     }
-    // }));
-});
 
-@injectable()
-class BackendClientImpl implements LocalizerCoreBackendClient {
-    getName(): Promise<string> {
-        return new Promise(resolve => resolve('I am a Client'));
-    }
-}
+    // bind custom translation view
+    bind(TranslationViewWidget).toSelf();
+    bindViewContribution(bind, TranslationViewContribution);
+    bind(FrontendApplicationContribution).toService(TranslationViewContribution);
+
+    // widget for group translation resource
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: TRANSLATION_VIEW_ID,
+        async createWidget(options: TranslationViewWidgetOptions): Promise<TranslationViewWidget> {
+            const { container } = context;
+            const child = container.createChild();
+            // const group = options.group;
+            // child.bind(TranslationViewWidgetOptions).toConstantValue({ group });
+            return child.get(TranslationViewWidget);
+        }
+    })).inSingletonScope();
+
+});
 
 export const TRANSLATION_CONTEXT_MENU: MenuPath = ['translation-context-menu'];
 
@@ -100,20 +84,6 @@ export const TRANSLATION_NAVIGATOR_PROPS = <TreeProps>{
     search: true,
     globalSelection: true
 };
-
-function bindBackenddService(bind: interfaces.Bind) {
-    bind(CommandContribution).to(BackendSampleCommandContribution).inSingletonScope();
-    bind(LocalizerCoreBackendClient).to(BackendClientImpl).inSingletonScope();
-    bind(LocalizerCoreBackendService).toDynamicValue(ctx => {
-        const connection = ctx.container.get(WebSocketConnectionProvider);
-        return connection.createProxy<LocalizerCoreBackendService>(LOCALIZER_CORE_BACKEND_PATH);
-    }).inSingletonScope();
-    bind(LocalizerCoreBackendWithClientService).toDynamicValue(ctx => {
-        const connection = ctx.container.get(WebSocketConnectionProvider);
-        const backendClient: LocalizerCoreBackendClient = ctx.container.get(LocalizerCoreBackendClient);
-        return connection.createProxy<LocalizerCoreBackendWithClientService>(LOCALIZER_CORE_BACKEND_WITH_CLIENT_PATH, backendClient);
-    }).inSingletonScope();
-}
 
 export function createTranslationNavigatorWidget(parent: interfaces.Container): TranslationNavigatorWidget {
     return createTranslationNavigatorContainer(parent).get<TranslationNavigatorWidget>(TranslationNavigatorWidget);

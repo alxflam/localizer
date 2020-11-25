@@ -4,10 +4,10 @@ import * as jsoncparser from "jsonc-parser";
 import { MonacoTextModelService } from "@theia/monaco/lib/browser/monaco-text-model-service";
 import { MonacoEditorModel } from "@theia/monaco/lib/browser/monaco-editor-model";
 import { DisposableCollection } from "@theia/core";
-import { ReferencedModelStorage } from "./referenced-model-storage";
+import { ReferencedModelStorage } from "../referenced-model-storage";
 // import { ArbFileParser } from "../../../arb/src/browser/arb-file-parser";
-import { ITranslationEntry } from "../common/translation-types";
-import { TranslationResourceParser } from "../common/parser";
+import { ITranslationEntry } from "../../common/translation-types";
+import { TranslationResourceParser } from "../../common/parser";
 
 export class TranslationFileView extends React.Component<TranslationFileView.Props, TranslationFileView.State> {
 

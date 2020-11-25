@@ -4,7 +4,7 @@ import { injectable, inject, named } from "inversify";
 import { EditorManager } from "@theia/editor/lib/browser";
 import { TranslationFileWidget } from "./translation-file-widget";
 import { ContributionProvider } from "@theia/core";
-import { TranslationSupport } from "./translation-support";
+import { TranslationSupport } from "../translation-support";
 
 @injectable()
 export class TranslationFileOpenHandler extends NavigatableWidgetOpenHandler<TranslationFileWidget> {

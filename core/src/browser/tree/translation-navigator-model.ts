@@ -1,12 +1,14 @@
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
 import { injectable, inject, postConstruct } from 'inversify';
-import { TranslationNavigatorTree, TranslationTreeRootNode } from './translation-navigator-tree';
+import { TranslationGroupRootNode, TranslationKeyNode, TranslationNavigatorTree, TranslationTreeRootNode } from './translation-navigator-tree';
 import { TranslationTreeModel } from '../translation-tree-model';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
 import { CompositeTreeNode, ExpandableTreeNode, SelectableTreeNode, TreeNode } from '@theia/core/lib/browser';
 import { ProgressService } from '@theia/core';
 import { TranslationManager } from '../translation-contribution-manager';
-
+import { CommandService } from '@theia/core/lib/common/command';
+import { TranslationViewCommands } from '../translation-view/translation-view-contribution';
+    
 @injectable()
 export class TranslationNavigatorModel extends TranslationTreeModel {
 
@@ -24,6 +26,9 @@ export class TranslationNavigatorModel extends TranslationTreeModel {
 
     @inject(TranslationManager)
     protected readonly translationManager: TranslationManager
+
+    @inject(CommandService)
+    protected readonly commandService: CommandService;
 
     @postConstruct()
     protected init(): void {
@@ -75,6 +80,19 @@ export class TranslationNavigatorModel extends TranslationTreeModel {
                 node.children.push(this.tree.createTranslationGroupRoot(group, node));
             }
             return node
+        }
+    }
+
+    protected doOpenNode(node: TreeNode): void {
+        if (node.visible === false) {
+            return;
+        }
+        // open translation view on double click
+        if (TranslationGroupRootNode.is(node)) {
+            this.commandService.executeCommand(TranslationViewCommands.OPEN_VIEW.id, node.group)
+        }
+        if (TranslationKeyNode.is(node)) {
+
         }
     }
 }

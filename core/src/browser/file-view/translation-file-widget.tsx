@@ -7,7 +7,7 @@ import { MonacoTextModelService } from "@theia/monaco/lib/browser/monaco-text-mo
 import { MonacoEditorModel } from "@theia/monaco/lib/browser/monaco-editor-model";
 import { Disposable, Reference } from "@theia/core";
 import { TranslationFileView } from "./translation-file-view";
-import { TranslationManager } from "./translation-contribution-manager";
+import { TranslationManager } from "../translation-contribution-manager";
 
 @injectable()
 export class TranslationFileWidgetOptions {
