@@ -22,5 +22,5 @@ function createSampleTreeContainer(parent: interfaces.Container): Container {
 }
 
 export function createSampleTreeWidget(parent: interfaces.Container): SampleTreeWidget {
-    return createSampleTreeContainer(parent).get<SampleTreeWidget>(SampleTreeWidget);
+    return createSampleTreeContainer(parent).get(SampleTreeWidget);
 }

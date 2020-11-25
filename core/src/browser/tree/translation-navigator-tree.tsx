@@ -1,78 +1,97 @@
-import { CompositeTreeNode, SelectableTreeNode, TreeImpl, TreeNode } from '@theia/core/lib/browser';
-import { injectable } from 'inversify';
-import { TranslationGroup } from '../../common/translation-types';
+import { CompositeTreeNode, ExpandableTreeNode, SelectableTreeNode, TreeImpl, TreeNode } from '@theia/core/lib/browser';
+import { injectable, inject } from 'inversify';
+import { ITranslationTreeNodeData, TranslationGroup } from '../../common/translation-types';
+import { TranslationManager } from '../translation-contribution-manager';
 
 // was previously extends TranslationTree
 @injectable()
 export class TranslationNavigatorTree extends TreeImpl {
 
+    @inject(TranslationManager)
+    protected readonly translationManager: TranslationManager
+
     protected resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
+
+        // TODO: reuse model here or directly invoke service calls?
+
+        // if children have already been resolved, directly return them
+        if (parent.children.length > 0) {
+            return Promise.resolve([...parent.children]);
+        }
+
         if (TranslationTreeRootNode.is(parent)) {
-            return Promise.resolve(
-                parent.children
-            );
+            // nothing to resolve - the groups are set on the root node already on model creation
         }
 
-        if (TranslationGroupRootNode.is(parent) && parent.children) {
-            return Promise.resolve(
-                parent.children
-            );
+        if (TranslationGroupRootNode.is(parent)) {
+            // lazily query the service for translation keys
+            const keys = this.translationManager.getTranslationKeys(parent.group);
+            return Promise.resolve(keys.map(key => this.createTranslationKeyNode(key, parent)));
         }
 
-        return Promise.resolve(Array.from(parent.children));
+        if (TranslationKeyNode.is(parent)) {
+            //lazily query the service for details, like translated languages
+        }
+
+        return Promise.resolve([]);
     }
 
     protected toNodeId(group: TranslationGroup, parent: CompositeTreeNode): string {
         return group.name
     }
 
-    async createTranslationGroupRoot(group: TranslationGroup, workspaceNode: TranslationTreeRootNode): Promise<TranslationGroupRootNode> {
-        const node = this.toNode(group, workspaceNode) as TranslationGroupRootNode;
-        Object.assign(node, {
-            // visible: workspaceNode.name !== TranslationTreeNode.name,
-            visible: true
-        });
+    public createTranslationKeyNode(group: ITranslationTreeNodeData, parent: TranslationGroupRootNode): TreeNode {
+        const node = this.toKeyNode(group, parent);
         return node;
     }
 
-    protected toNode(group: TranslationGroup, workspaceNode: TranslationTreeRootNode): TranslationGroupRootNode {
+    protected toKeyNode(key: ITranslationTreeNodeData, parent: TranslationGroupRootNode): TreeNode {
+        const id = parent.id + '/' + key.key;
+        const node = this.getNode(id);
+        if (node) {
+            return node;
+        }
+        return {
+            id: id,
+            parent: parent,
+            key: key.key,
+            selected: false
+        } as TranslationKeyNode
+    }
+
+    public createTranslationGroupRoot(group: TranslationGroup, parent: TranslationTreeRootNode): TreeNode {
+        const node = this.toGroupRootNode(group, parent);
+        return node;
+    }
+
+    protected toGroupRootNode(group: TranslationGroup, workspaceNode: TranslationTreeRootNode): TreeNode {
         const id = this.toNodeId(group, workspaceNode);
         const node = this.getNode(id);
         if (TranslationGroupRootNode.is(node)) {
             return node;
         } else {
-
-            const newNode = {
+            const groupRootNode = {
                 id: id,
-                name: group.name,
                 parent: workspaceNode,
+                group: group,
                 visible: true,
+                expanded: false,
                 children: []
-            } as TranslationGroupRootNode
+            } as TranslationGroupRootNode;
 
-            const item = {
-                id: 'a',
-                name: 'test',
-                visible: true,
-                key: 'a',
-                selected: false,
-                parent: newNode
-            } as TranslationKeyNode;
-
-            newNode.children.push(item)
-            return newNode;
-
+            return groupRootNode;
         }
     }
 }
 
 export interface TranslationTreeRootNode extends CompositeTreeNode, SelectableTreeNode {
-    children: TranslationGroupRootNode[];
+    children: TreeNode[];
 }
+
 export namespace TranslationTreeRootNode {
 
     export const id = 'TranslationTreeRootNodeId';
-    export const name = 'TranslationTreeRootNode';
+    export const name = 'Translations';
 
     export function is(node: TreeNode | undefined): node is TranslationTreeRootNode {
         return CompositeTreeNode.is(node) && node.id === TranslationTreeRootNode.id;
@@ -87,8 +106,8 @@ export namespace TranslationTreeRootNode {
             name: multiRootName || TranslationTreeRootNode.name,
             parent: undefined,
             children: [],
-            visible: false,
-            selected: false
+            selected: false,
+            visible: false
         };
     }
 }
@@ -96,14 +115,14 @@ export namespace TranslationTreeRootNode {
 /*
 * Root node of a translation group
 */
-export interface TranslationGroupRootNode extends CompositeTreeNode {
-    parent: TranslationTreeRootNode;
-    children: TranslationKeyNode[];
+export interface TranslationGroupRootNode extends ExpandableTreeNode {
+    group: TranslationGroup;
 }
+
 export namespace TranslationGroupRootNode {
 
     export function is(node: Object | undefined): node is TranslationGroupRootNode {
-        return CompositeTreeNode.is(node) && TranslationTreeRootNode.is(node.parent);
+        return ExpandableTreeNode.is(node) && TranslationTreeRootNode.is(node.parent) && 'group' in node;
     }
 
     export function find(node: TreeNode | undefined): TranslationGroupRootNode | undefined {
@@ -116,9 +135,8 @@ export namespace TranslationGroupRootNode {
     }
 }
 
-
 export interface TranslationKeyNode extends SelectableTreeNode {
-    key: String;
+    key: string;
 }
 export namespace TranslationKeyNode {
     export function is(node: object | undefined): node is TranslationKeyNode {

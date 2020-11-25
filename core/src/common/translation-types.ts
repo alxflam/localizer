@@ -1,5 +1,9 @@
 import URI from "@theia/core/lib/common/uri";
 
+export interface ITranslationTreeNodeData {
+    key: string;
+}
+
 export interface ITranslationEntry {
     line: number;
     key: string;

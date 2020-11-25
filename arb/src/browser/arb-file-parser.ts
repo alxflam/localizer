@@ -1,34 +1,35 @@
 import { ITranslationEntry, ITranslationKeyDescription } from "@localizer/core/src/common/translation-types";
 import { TranslationResourceParser } from "@localizer/core/src/common/parser";
-// import * as jsoncparser from "jsonc-parser";
+import * as jsoncparser from "jsonc-parser";
         // import { FileUri } from '@theia/core/lib/node/file-uri';
         // import * as fs from 'fs-extra';
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import URI from "@theia/core/lib/common/uri";
+import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
 @injectable()
 export class ArbFileParser implements TranslationResourceParser {
 
+    @inject(FileService)
+    protected fileService: FileService
 
 
-    parseByURI(uri: URI): ITranslationEntry[] {
-        // read contents from 
-        // TODO: needs to be done on the backend...
-        // const fsPath = FileUri.fsPath(uri);
-        // const [stat, content] = await Promise.all([fs.stat(fsPath), fs.readFile(fsPath, 'utf8')]);
-        // return { stat: Object.assign(stat, { uri }), content };
-        // transform to json
-        // const data = jsoncparser.parse(jsoncparser.stripComments(this.props.model.getText())) || {};
-
-        // then forward
-        return this.parseByContent('')
+    async parseByURI(uri: URI): Promise<ITranslationEntry[]> {
+        // read file contents from disk
+        const fileContent = await this.fileService.readFile(uri, 'utf-8') 
+        // transform to string
+        const content = fileContent.value.toString();
+        // parse as json
+        const json = jsoncparser.parse(jsoncparser.stripComments(content)) || {};
+        // then forward parsing
+        return this.parseByContent(json);
     }
 
-
     parseByContent(content: any): ITranslationEntry[] {
-
+        // create an intermediary result structure: the translation key and it's assigned value
         const result = new Map<string, ITranslationEntry>();
 
+        // process every key of the json
         for (const [key, value] of Object.entries(content)) {
             const isTranslation = typeof value === "string";
             if (key.startsWith("@@")) {
@@ -70,6 +71,5 @@ export class ArbFileParser implements TranslationResourceParser {
         }
 
         return Array.from(result.values());
-
     }
 }

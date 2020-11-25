@@ -1,12 +1,10 @@
-import { injectable, inject } from 'inversify';
-import { TreeModelImpl } from '@theia/core/lib/browser';
-import { Position } from 'vscode-languageserver-types';
-import { SampleTree } from './sample-tree';
+import { injectable, inject, postConstruct } from 'inversify';
+import { CompositeTreeNode, TreeModelImpl } from '@theia/core/lib/browser';
+import { GroupNode, SampleTree } from './sample-tree';
+import { Group, Person } from '../sample';
 
 @injectable()
 export class SampleTreeModel extends TreeModelImpl {
-
-    private _languageId: string | undefined;
 
     @inject(SampleTree) protected readonly tree: SampleTree;
 
@@ -14,20 +12,25 @@ export class SampleTreeModel extends TreeModelImpl {
         return this.tree;
     }
 
-    get languageId(): string | undefined {
-        return this._languageId;
-    }
-
-    async initializeCallHierarchy(languageId: string | undefined, uri: string | undefined, position: Position | undefined): Promise<void> {
-        this.tree.root = undefined;
-        this._languageId = languageId;
-        if (languageId && uri && position) {
-           
-                // if (true) {
-                //     const rootNode = DefinitionNode.create(undefined, undefined);
-                //     this.tree.root = rootNode;
-                // }
-            }
+    @postConstruct()
+    async init(): Promise<void> {
+        super.init();
         
+        this.tree.root = undefined;
+
+        const person: Person = {
+            firstName: 'Fred',
+                    lastName: 'Feuerstein'
+        }
+
+        const root: CompositeTreeNode = GroupNode.create(<Group>{
+            groupName: 'TheFeuersteins',
+            members: [
+                person
+            ],
+        }, 
+        undefined);
+        
+        this.tree.root = root;        
     }
 }

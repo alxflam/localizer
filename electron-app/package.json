@@ -20,8 +20,7 @@
     "@theia/mini-browser": "latest",
     "@localizer/branding": "0.0.0",
     "@localizer/core": "0.0.0",
-    "@localizer/arb": "0.0.0",
-    "sample": "0.0.0"
+    "@localizer/arb": "0.0.0"
   },
   "devDependencies": {
     "@theia/cli": "latest"
@@ -29,7 +28,8 @@
   "scripts": {
     "prepare": "theia build --mode development",
     "start": "theia start",
-    "watch": "theia build --watch --mode development"
+    "watch": "theia build --watch --mode development",
+    "clean": "rimraf lib"
   },
   "theia": {
     "target": "electron"

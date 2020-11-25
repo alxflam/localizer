@@ -4,7 +4,7 @@
 import { ContainerModule, injectable, interfaces } from 'inversify';
 import { CoreContribution } from './core-contribution';
 import { bindContributionProvider, CommandContribution, MenuPath } from '@theia/core';
-import { bindViewContribution, defaultTreeProps, FrontendApplicationContribution, LabelProviderContribution, NavigatableWidgetOptions, OpenHandler, Tree, TreeModel, TreeProps, ViewContainer, WebSocketConnectionProvider, WidgetFactory, WidgetManager } from "@theia/core/lib/browser";
+import { bindViewContribution, defaultTreeProps, FrontendApplicationContribution, LabelProviderContribution, NavigatableWidgetOptions, OpenHandler, Tree, TreeModel, TreeProps, WebSocketConnectionProvider, WidgetFactory } from "@theia/core/lib/browser";
 import { LocalizerCoreBackendClient, LocalizerCoreBackendWithClientService, LocalizerCoreBackendService, LOCALIZER_CORE_BACKEND_PATH, LOCALIZER_CORE_BACKEND_WITH_CLIENT_PATH } from '../common/protocol';
 import { BackendSampleCommandContribution } from './core-services-contribution';
 import { TranslationFileOpenHandler } from './translation-file-open-handler';
@@ -12,7 +12,7 @@ import { TranslationFileWidget, TranslationFileWidgetOptions } from './translati
 import URI from '@theia/core/lib/common/uri';
 import { TranslationNavigatorContribution } from './tree/translation-navigator-contribution';
 import { TabBarToolbarContribution } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
-import { TranslationNavigatorWidget, TRANSLATION_NAVIGATOR_ID, TRANSLATION_VIEW_CONTAINER_ID, TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS } from './tree/translation-navigator-widget';
+import { TranslationNavigatorWidget, TRANSLATION_NAVIGATOR_ID } from './tree/translation-navigator-widget';
 import { TranslationNavigatorModel } from './tree/translation-navigator-model';
 import { TranslationNavigatorTree } from './tree/translation-navigator-tree';
 import { createTreeContainer, TreeImpl, TreeModelImpl, TreeWidget } from '@theia/core/lib/browser/tree';
@@ -52,37 +52,36 @@ export default new ContainerModule(bind => {
 
     // bind custom view contribution for translation navigator tree
     bindViewContribution(bind, TranslationNavigatorContribution);
-    bind(FrontendApplicationContribution).toService(TranslationNavigatorContribution);
     bind(TabBarToolbarContribution).toService(TranslationNavigatorContribution);
 
     bind(TranslationTreeLabelProvider).toSelf().inSingletonScope();
     bind(LabelProviderContribution).toService(TranslationTreeLabelProvider);
 
-    bind(TranslationNavigatorWidget).toDynamicValue(ctx =>
-        createTranslationNavigatorWidget(ctx.container)
-    );
+    // bind(TranslationNavigatorWidget).toDynamicValue(ctx =>
+    //     createTranslationNavigatorWidget(ctx.container)
+    // );
     
     bind(WidgetFactory).toDynamicValue(({ container }) => ({
         id: TRANSLATION_NAVIGATOR_ID,
-        createWidget: () => container.get(TranslationNavigatorWidget)
+        createWidget: () => createTranslationNavigatorWidget(container)
     })).inSingletonScope();
     
-    bind(WidgetFactory).toDynamicValue(({ container }) => ({
-        id: TRANSLATION_VIEW_CONTAINER_ID,
-        createWidget: async () => {
-            const viewContainer = container.get<ViewContainer.Factory>(ViewContainer.Factory)({
-                id: TRANSLATION_VIEW_CONTAINER_ID,
-                progressLocationId: 'translation'
-            });
-            viewContainer.setTitleOptions(TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS);
-            const widget = await container.get(WidgetManager).getOrCreateWidget(TRANSLATION_NAVIGATOR_ID);
-            viewContainer.addWidget(widget, {
-                canHide: false,
-                initiallyCollapsed: false
-            });
-            return viewContainer;
-        }
-    }));
+    // bind(WidgetFactory).toDynamicValue(({ container }) => ({
+    //     id: TRANSLATION_VIEW_CONTAINER_ID,
+    //     createWidget: async () => {
+    //         const viewContainer = container.get<ViewContainer.Factory>(ViewContainer.Factory)({
+    //             id: TRANSLATION_VIEW_CONTAINER_ID,
+    //             progressLocationId: 'translation'
+    //         });
+    //         viewContainer.setTitleOptions(TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS);
+    //         const widget = await container.get(WidgetManager).getOrCreateWidget(TRANSLATION_NAVIGATOR_ID);
+    //         viewContainer.addWidget(widget, {
+    //             canHide: false,
+    //             initiallyCollapsed: false
+    //         });
+    //         return viewContainer;
+    //     }
+    // }));
 });
 
 @injectable()

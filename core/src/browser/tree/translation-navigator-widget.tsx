@@ -1,5 +1,5 @@
-import { injectable, inject, postConstruct } from 'inversify';
-import { ContextMenuRenderer, TreeProps, ViewContainerTitleOptions, ApplicationShell, TreeModel, TreeWidget, ExpandableTreeNode, TreeNode } from '@theia/core/lib/browser';
+import { injectable, inject } from 'inversify';
+import { ContextMenuRenderer, TreeProps, ViewContainerTitleOptions, ApplicationShell, TreeModel, TreeWidget } from '@theia/core/lib/browser';
 import { TranslationNavigatorModel } from './translation-navigator-model';
 import { SelectionService } from '@theia/core';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
@@ -31,12 +31,10 @@ export class TranslationNavigatorWidget extends TreeWidget {
     ) {
         super(props, model, contextMenuRenderer);
         this.id = TRANSLATION_NAVIGATOR_ID;
-        this.addClass(CLASS);
-    }
-
-    @postConstruct()
-    protected init(): void {
-        super.init();
+        this.title.label = TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS.label;
+        this.title.caption = TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS.label;
+        this.title.iconClass = 'fa fa-globe';
+        this.title.closable = true;
     }
 
     protected renderTree(model: TreeModel): React.ReactNode {
@@ -52,11 +50,6 @@ export class TranslationNavigatorWidget extends TreeWidget {
         return <div className='theia-navigator-container'>
             <div className='center'>You have not yet opened a workspace.</div>
         </div>;
-    }
- 
-    protected isExpandable(node: TreeNode): node is ExpandableTreeNode {
-        // TODO: check if root, then true, else if has children
-        return true;
     }
 
 }

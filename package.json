@@ -12,8 +12,6 @@
     "arb",
     "branding",
     "core",
-    "arb_lsp",
-    "sample",
     "browser-app",
     "electron-app"
   ]

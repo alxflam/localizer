@@ -1,87 +1,78 @@
-
 import { injectable } from 'inversify';
 import { TreeNode, CompositeTreeNode, SelectableTreeNode, ExpandableTreeNode, TreeImpl } from '@theia/core/lib/browser';
-
-import { Definition, Caller } from '../sample';
-
-import { Md5 } from 'ts-md5/dist/md5';
+import { Group, Person } from '../sample';
 
 @injectable()
 export class SampleTree extends TreeImpl {
 
     async resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
         if (parent.children.length > 0) {
-            return Promise.resolve([...parent.children]);
+            return [...parent.children];
         }
-        let definition: Definition | undefined;
-        if (DefinitionNode.is(parent)) {
-            definition = parent.definition;
-        } else if (CallerNode.is(parent)) {
-            definition = parent.caller.callerDefinition;
+
+        if (GroupNode.is(parent)) {
+            if (parent.group && parent.group?.members) {
+                var nodes = this.toNodes(parent.group?.members, parent);
+                return nodes;
+            }
         }
-        if (definition) {
-            return Promise.resolve([]);
-            // return this.toNodes(callers, parent);
-        }
-        return Promise.resolve([]);
+
+        return [];
     }
 
-    protected toNodes(callers: Caller[], parent: CompositeTreeNode): TreeNode[] {
-        return callers.map(caller => this.toNode(caller, parent));
+    protected toNodes(callers: Person[], parent: CompositeTreeNode): TreeNode[] {
+        var nodes = callers.map(caller => this.toNode(caller, parent));
+        return nodes;
     }
 
-    protected toNode(caller: Caller, parent: CompositeTreeNode | undefined): TreeNode {
-        return CallerNode.create(caller, parent as TreeNode);
+    protected toNode(caller: Person, parent: CompositeTreeNode | undefined): TreeNode {
+        var node = PersonNode.create(caller, parent);
+
+        var exisitingNode = this.getNode(node.id);
+        if (exisitingNode) {
+            return exisitingNode;
+        }
+
+        return node;
     }
 }
 
-export interface DefinitionNode extends SelectableTreeNode, ExpandableTreeNode {
-    definition: Definition;
+export interface GroupNode extends ExpandableTreeNode {
+    group: Group;
 }
 
-export namespace DefinitionNode {
-    export function is(node: TreeNode | undefined): node is DefinitionNode {
-        return !!node && 'definition' in node;
+export namespace GroupNode {
+    export function is(node: TreeNode | object | undefined): node is GroupNode {
+        return !!node && 'group' in node;
     }
 
-    export function create(definition: Definition, parent: TreeNode | undefined): DefinitionNode {
-        const name = definition.symbolName;
-        const id = createId(definition, parent);
-        return <DefinitionNode>{
-            id, definition, name, parent,
-            visible: true,
+    export function create(group: Group, parent: TreeNode | undefined): GroupNode {
+        const id = group.groupName;
+        return <GroupNode>{
+            id, group, parent,
+            // name: 'Group.: ' + group.groupName,
             children: [],
             expanded: false,
-            selected: false,
         };
     }
 }
 
-export interface CallerNode extends SelectableTreeNode, ExpandableTreeNode {
-    caller: Caller;
+export interface PersonNode extends SelectableTreeNode {
+    person: Person;
 }
 
-export namespace CallerNode {
-    export function is(node: TreeNode | undefined): node is CallerNode {
-        return !!node && 'caller' in node;
+export namespace PersonNode {
+    export function is(node: TreeNode | object | undefined): node is PersonNode {
+        return !!node && 'person' in node;
     }
 
-    export function create(caller: Caller, parent: TreeNode | undefined): CallerNode {
-        const callerDefinition = caller.callerDefinition;
-        const name = callerDefinition.symbolName;
-        const id = createId(callerDefinition, parent);
-        return <CallerNode>{
-            id, caller, name, parent,
-            visible: true,
-            children: [],
-            expanded: false,
-            selected: false,
+    export function create(person: Person, parent: CompositeTreeNode | undefined): PersonNode {
+        const idPrefix = (parent) ? parent.id + '/' : '';
+        const id = idPrefix + person.firstName + person.lastName;
+        return <PersonNode>{
+            id, person, parent,
+            // name: 'Person: ' + person.firstName + ' ' + person.lastName,
+            selected: false
         };
     }
-}
-
-function createId(definition: Definition, parent: TreeNode | undefined): string {
-    const idPrefix = (parent) ? parent.id + '/' : '';
-    const id = idPrefix + Md5.hashStr(JSON.stringify(definition));
-    return id;
 }

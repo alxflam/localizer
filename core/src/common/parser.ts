@@ -11,7 +11,10 @@ export interface TranslationResourceParser {
     */
     parseByContent(content: any): ITranslationEntry[];
 
-    parseByURI(uri: URI): ITranslationEntry[];
+    /*
+    * Reads the given resource from disk and returns the parse result
+    */
+    parseByURI(uri: URI): Promise<ITranslationEntry[]>;
 
 
 }

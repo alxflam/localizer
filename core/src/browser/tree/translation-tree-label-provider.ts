@@ -2,6 +2,7 @@ import { injectable, inject } from 'inversify';
 import { LabelProviderContribution, DidChangeLabelEvent, LabelProvider } from '@theia/core/lib/browser/label-provider';
 import { TreeLabelProvider } from '@theia/core/lib/browser/tree/tree-label-provider';
 import { TranslationGroupRootNode, TranslationKeyNode } from './translation-navigator-tree';
+import { TreeNode } from '@theia/core/lib/browser';
 
 @injectable()
 export class TranslationTreeLabelProvider implements LabelProviderContribution {
@@ -18,19 +19,29 @@ export class TranslationTreeLabelProvider implements LabelProviderContribution {
             0;
     }
 
-    getIcon(node: TranslationGroupRootNode): string {
+    getIcon(node: TreeNode): string {
         return this.labelProvider.getIcon(node);
     }
 
-    getName(node: TranslationGroupRootNode): string {
+    getName(node: TreeNode): string {
+        if (TranslationGroupRootNode.is(node)) {
+            return node.group.name;
+        } else if (TranslationKeyNode.is(node)) {
+            return node.key;
+        }
         return this.labelProvider.getName(node);
     }
 
-    getDescription(node: TranslationGroupRootNode): string {
+    getDescription(node: TreeNode): string {
+        if (TranslationGroupRootNode.is(node)) {
+            return node.group.name;
+        } else if (TranslationKeyNode.is(node)) {
+            return node.key;
+        }
         return this.labelProvider.getLongName(node);
     }
 
-    affects(node: TranslationGroupRootNode, event: DidChangeLabelEvent): boolean {
+    affects(node: TreeNode, event: DidChangeLabelEvent): boolean {
         return event.affects(node);
     }
 

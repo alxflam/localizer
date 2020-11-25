@@ -9,6 +9,7 @@ import { ArbFileParser } from './arb-file-parser';
 import { injectable, inject } from 'inversify';
 import { ITranslationEntry } from '@localizer/core/lib/common/translation-types';
 import { ITranslationManager } from '@localizer/core/lib/browser/translation-manager';
+import { ITranslationTreeNodeData, TranslationGroup } from '@localizer/core/src/common/translation-types';
 
 
 interface valueType {
@@ -24,7 +25,6 @@ export class ArbTranslationSupport implements TranslationSupport {
     protected readonly parser: ArbFileParser
 
     protected parseResult = new Map<string, valueType>()
-
 
     supportedExtensions(): MaybePromise<string | string[]> {
         return 'arb'
@@ -56,9 +56,13 @@ export class ArbTranslationSupport implements TranslationSupport {
             return
         }
 
-        files[0].children?.forEach((child) => {
+        this.processWorkspaceRoot(files[0])
+    }
+
+    async processWorkspaceRoot(root: FileStat) {
+        root.children?.forEach(async (child) => {
             if (child.isFile && this.supports(child.resource)) {
-               const parsedResource = this.getParser().parseByURI(child.resource)
+               const parsedResource = await this.getParser().parseByURI(child.resource)
                this.parseResult.set(child.resource.toString(), {uri: child.resource, fileStat: child, entries: parsedResource })
             }
         })
@@ -73,7 +77,7 @@ export class ArbTranslationSupport implements TranslationSupport {
         const entry = this.parseResult.get(model.uri.toString())
         if (entry) {
             // TODO: changes are not yet written to disk, so likely the event needs to be used instead
-            const parsedResource = this.getParser().parseByURI(new URI(model.uri))
+            const parsedResource = this.getParser().parseByContent(model.getText())
             entry.entries = parsedResource
         }
     }
@@ -95,7 +99,40 @@ export class ArbTranslationSupport implements TranslationSupport {
         if(!this.supports(new URI(model.uri))) {
             return
         }
-
     }
 
+    isActive(): boolean {
+        return true;
+    }
+
+    getTranslationGroups(): TranslationGroup[] {
+        let groupNames = new Set();
+        for (const resource of this.parseResult.entries()) {
+            let name = resource[1].fileStat.name
+            const index = name.lastIndexOf('_')
+            if (index > -1) {
+                name = name.substring(0, index)
+            }
+            groupNames.add(name)
+        }
+
+        return Array.from(groupNames).map(a => <TranslationGroup>{ name: a, resources: [] });
+    }
+
+    getTranslationKeys(group: TranslationGroup): ITranslationTreeNodeData[] {
+        let keys = new Set();
+        for (const resource of this.parseResult.entries()) {
+            let name = resource[1].fileStat.name
+            const index = name.lastIndexOf('_')
+            if (index > -1) {
+                name = name.substring(0, index)
+            }
+            if (name === group.name) {
+                resource[1].entries.map(item => item.key).forEach(a => keys.add(a))
+            }
+        }
+
+        return Array.from(keys).map(a => <ITranslationTreeNodeData>{ key: a});
+
+    }
 }

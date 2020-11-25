@@ -2,7 +2,6 @@ import { Command, CommandRegistry } from '@theia/core';
 import {
     AbstractViewContribution,
     FrontendApplication,
-    FrontendApplicationContribution,
     OpenerService,
     Widget
 } from '@theia/core/lib/browser';
@@ -13,7 +12,7 @@ import {
 } from '@theia/workspace/lib/browser';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
 import { injectable, inject, postConstruct } from 'inversify';
-import { TRANSLATION_VIEW_CONTAINER_ID, TRANSLATION_NAVIGATOR_ID, TranslationNavigatorWidget } from './translation-navigator-widget';
+import { TRANSLATION_NAVIGATOR_ID, TranslationNavigatorWidget } from './translation-navigator-widget';
 import { TranslationNavigatorModel } from './translation-navigator-model';
 export namespace TranslationNavigatorCommands {
     export const REFRESH_NAVIGATOR: Command = {
@@ -31,7 +30,7 @@ export namespace TranslationNavigatorCommands {
 }
 
 @injectable()
-export class TranslationNavigatorContribution extends AbstractViewContribution<TranslationNavigatorWidget> implements FrontendApplicationContribution, TabBarToolbarContribution {
+export class TranslationNavigatorContribution extends AbstractViewContribution<TranslationNavigatorWidget> implements TabBarToolbarContribution {
 
 
     @inject(WorkspaceCommandContribution)
@@ -43,7 +42,6 @@ export class TranslationNavigatorContribution extends AbstractViewContribution<T
         @inject(WorkspacePreferences) protected readonly workspacePreferences: WorkspacePreferences
     ) {
         super({
-            viewContainerId: TRANSLATION_VIEW_CONTAINER_ID,
             widgetId: TRANSLATION_NAVIGATOR_ID,
             widgetName: 'Translation',
             defaultWidgetOptions: {

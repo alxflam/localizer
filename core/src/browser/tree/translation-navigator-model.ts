@@ -67,13 +67,13 @@ export class TranslationNavigatorModel extends TranslationTreeModel {
         // if there is a workspace
         if (this.workspaceService.opened) {
             // then check if there are translation nodes
-            const groups = this.translationManager.getTranslationGroups();
-
             const node = TranslationTreeRootNode.createRoot();
+            // translation groups need to be added initially, otherwise they won't be visible
+            // a workaround would be to make the root node a visible ExpandableTreeNode, but that introduces an unnecessary tree hierarchy
+            const groups = this.translationManager.getTranslationGroups();
             for (const group of groups) {
-                node.children.push(await this.tree.createTranslationGroupRoot(group, node))
+                node.children.push(this.tree.createTranslationGroupRoot(group, node));
             }
-
             return node
         }
     }
