@@ -70,17 +70,19 @@ Start watching of the electron example.
 
 Launch `Start Electron Backend` configuration from VS code.
 
-## Publishing @localizer/core
+##  TODO
 
-Create a npm user and login to the npm registry, [more on npm publishing](https://docs.npmjs.com/getting-started/publishing-npm-packages).
-
-    npm login
-
-Publish packages with lerna to update versions properly across local packages, [more on publishing with lerna](https://github.com/lerna/lerna#publish).
-
-    npx lerna publish
-
-After upgrade / if node compile version mismatch error occurs for electron:
-    
-    cd electron-app
-    yarn electron-rebuild
+- [X] Seperate packages into core, branding and format specific implementations, e.g. arb
+- [X] Change applicatonName from default
+- [X] Add git extension to app
+- [] Clean up Getting Started page
+- [] Translation Preview should allow editing
+- [] Translation Group View should allow editing
+- [] Translation Navigator should indicate status
+    - [] translated, missing translation, and their counts
+- [] Navigator double-click should open translation dialog
+- [] Add translation provides
+    - [] Google Translate
+    - [] Deepl
+- [] Provide electron build
+- [] Automate electron build using github actions
