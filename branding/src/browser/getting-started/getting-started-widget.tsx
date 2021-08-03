@@ -52,7 +52,7 @@ export class GettingStartedWidget extends ReactWidget {
     /**
      * Collection of useful links to display for end users.
      */
-    protected readonly repositoryUrl = 'https://www.github.com/alex0711/';
+    protected readonly repositoryUrl = 'https://www.github.com/alxflam/localizer';
 
     @inject(ApplicationServer)
     protected readonly appServer: ApplicationServer;
@@ -123,7 +123,7 @@ export class GettingStartedWidget extends ReactWidget {
      */
     protected renderHeader(): React.ReactNode {
         return <div className='gs-header'>
-            <h1>Something2 {this.applicationName}<span className='gs-sub-header'>Getting Started</span></h1>
+            <h1>Getting Started with {this.applicationName}</h1>
         </div>;
     }
 
