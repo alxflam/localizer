@@ -18,6 +18,7 @@
     "@theia/plugin-ext-vscode": "latest",
     "@theia/plugin-ext": "latest",
     "@theia/mini-browser": "latest",
+    "@theia/git": "latest",
     "@localizer/branding": "0.0.0",
     "@localizer/core": "0.0.0",
     "@localizer/arb": "0.0.0"
@@ -32,6 +33,11 @@
     "clean": "rimraf lib"
   },
   "theia": {
-    "target": "electron"
+    "target": "electron",
+    "frontend": {
+      "config": {
+        "applicationName": "Localizer"
+      }
+    }
   }
 }
