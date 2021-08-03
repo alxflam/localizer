@@ -14,8 +14,12 @@
     "@theia/process": "latest",
     "@theia/terminal": "latest",
     "@theia/workspace": "latest",
+    "@theia/plugin-ext-vscode": "latest",
+    "@theia/plugin-ext": "latest",
+    "@theia/mini-browser": "latest",
     "@localizer/core": "0.0.0",
-    "@localizer/branding": "0.0.0"
+    "@localizer/branding": "0.0.0",
+    "@localizer/arb": "0.0.0"
   },
   "devDependencies": {
     "@theia/cli": "latest"

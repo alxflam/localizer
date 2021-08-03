@@ -1,10 +1,10 @@
-# @localizer/core
-The example of how to build the Theia-based applications with the @localizer/core.
+# localizer
+Localization tool for ARB files built with Theia.
 
 ## Getting started
 
 Install prerequistes as described here: https://github.com/eclipse-theia/theia/blob/master/doc/Developing.md#prerequisites
-Install node-native-keymap as dscribed here: https://github.com/Microsoft/node-native-keymap
+Install node-native-keymap as described here: https://github.com/Microsoft/node-native-keymap
 
 Install [nvm](https://github.com/creationix/nvm#install-script).
 
@@ -18,6 +18,11 @@ Install npm and node.
 Install yarn.
 
     npm install -g yarn
+
+## Checkout
+
+    Checkout repository
+    yarn 
 
 ## Running the browser example
 
