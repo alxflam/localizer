@@ -89,7 +89,7 @@ export class TranslationNavigatorModel extends TranslationTreeModel {
         }
         // open translation view on double click
         if (TranslationGroupRootNode.is(node)) {
-            this.commandService.executeCommand(TranslationViewCommands.OPEN_VIEW.id, node.group)
+            this.commandService.executeCommand(TranslationViewCommands.OPEN_VIEW.id, {'group': node.group })
         }
         if (TranslationKeyNode.is(node)) {
 

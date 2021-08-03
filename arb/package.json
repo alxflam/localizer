@@ -10,8 +10,8 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "latest",
-    "@localizer/core": "0.0.0"
+    "@localizer/core": "0.0.0",
+    "@theia/core": "latest"
   },
   "devDependencies": {
     "rimraf": "latest",

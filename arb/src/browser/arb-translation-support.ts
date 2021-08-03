@@ -9,7 +9,7 @@ import { ArbFileParser } from './arb-file-parser';
 import { injectable, inject } from 'inversify';
 import { ITranslationEntry } from '@localizer/core/lib/common/translation-types';
 import { ITranslationManager } from '@localizer/core/lib/browser/translation-manager';
-import { ITranslationTreeNodeData, TranslationGroup } from '@localizer/core/src/common/translation-types';
+import { ITranslationGroupData, ITranslationTreeNodeData, TranslationGroup } from '@localizer/core/src/common/translation-types';
 
 interface valueType {
     uri: URI
@@ -132,6 +132,27 @@ export class ArbTranslationSupport implements TranslationSupport {
         }
 
         return Array.from(keys).map(a => <ITranslationTreeNodeData>{ key: a});
+    }
 
+    getTranslationEntries(group: TranslationGroup): ITranslationGroupData {
+        const result: ITranslationGroupData = { 
+            languages : new Map(),
+            data : [],
+        };
+        
+        let keys = new Set();
+
+        for (const resource of this.parseResult.entries()) {
+            let name = resource[1].fileStat.name
+            const index = name.lastIndexOf('_')
+            if (index > -1) {
+                name = name.substring(0, index)
+            }
+            if (name === group.name) {
+                resource[1].entries.map(item => item.key).forEach(a => keys.add(a))
+            }
+        }
+
+        return result;
     }
 }

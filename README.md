@@ -3,14 +3,17 @@ The example of how to build the Theia-based applications with the @localizer/cor
 
 ## Getting started
 
+Install prerequistes as described here: https://github.com/eclipse-theia/theia/blob/master/doc/Developing.md#prerequisites
+Install node-native-keymap as dscribed here: https://github.com/Microsoft/node-native-keymap
+
 Install [nvm](https://github.com/creationix/nvm#install-script).
 
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash
 
 Install npm and node.
 
-    nvm install 10
-    nvm use 10
+    nvm install 12.14.1
+    nvm use 12.14.1
 
 Install yarn.
 

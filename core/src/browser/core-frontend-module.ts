@@ -13,7 +13,7 @@ import { createTreeContainer, TreeImpl, TreeModelImpl, TreeWidget } from '@theia
 import { TranslationSupport } from './translation-support';
 import { TranslationManager } from './translation-contribution-manager';
 import { TranslationTreeLabelProvider } from './tree/translation-tree-label-provider';
-import { TranslationViewWidget, TranslationViewWidgetOptions, TRANSLATION_VIEW_ID } from './translation-view/translation-view-widget';
+import { TranslationViewWidget, TRANSLATION_VIEW_ID } from './translation-view/translation-view-widget';
 import URI from '@theia/core/lib/common/uri';
 import { TranslationViewContribution } from './translation-view/translation-view-contribution';
 
@@ -64,7 +64,7 @@ export default new ContainerModule(bind => {
     // widget for group translation resource
     bind(WidgetFactory).toDynamicValue(context => ({
         id: TRANSLATION_VIEW_ID,
-        async createWidget(options: TranslationViewWidgetOptions): Promise<TranslationViewWidget> {
+        async createWidget(): Promise<TranslationViewWidget> {
             const { container } = context;
             const child = container.createChild();
             // const group = options.group;
