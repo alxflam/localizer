@@ -51,7 +51,7 @@ export class TranslationViewContribution extends AbstractViewContribution<Transl
 
     async openView(args?: Partial<TranslationViewWidgetOptions>): Promise<TranslationViewWidget> {
         const widget = await super.openView(args);
-        this.refreshWidget(args!.group);
+        this.refreshWidget(args?.group);
         return widget;
     }
 
