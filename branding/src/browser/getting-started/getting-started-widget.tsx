@@ -6,7 +6,7 @@ import React = require('react');
 export class LocalizerGettingStartedWidget extends GettingStartedWidget {
 
     /**
-     * Collection of useful links to display for end users.
+     * Repository link
      */
     protected readonly repositoryUrl = 'https://www.github.com/alxflam/localizer';
 
@@ -36,7 +36,4 @@ export class LocalizerGettingStartedWidget extends GettingStartedWidget {
             </div>
         </div>;
     }
-
-
-
 }
