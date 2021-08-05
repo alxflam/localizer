@@ -2,35 +2,45 @@
   "private": true,
   "name": "localizer",
   "version": "0.0.0",
+  "main": "src-gen/frontend/electron-main.js",
+  "author": {
+    "name": "Alexander Flammer",
+    "email": "test",
+    "url": "https://github.com/alxflam"
+  },
+  "homepage": "https://github.com/alxflam/localizer",
   "dependencies": {
+    "@localizer/arb": "0.0.0",
+    "@localizer/branding": "0.0.0",
+    "@localizer/core": "0.0.0",
     "@theia/core": "latest",
     "@theia/editor": "latest",
     "@theia/electron": "latest",
     "@theia/filesystem": "latest",
+    "@theia/git": "latest",
     "@theia/markers": "latest",
     "@theia/messages": "latest",
+    "@theia/mini-browser": "latest",
     "@theia/monaco": "latest",
     "@theia/navigator": "latest",
+    "@theia/plugin-ext": "latest",
+    "@theia/plugin-ext-vscode": "latest",
     "@theia/preferences": "latest",
     "@theia/process": "latest",
     "@theia/terminal": "latest",
-    "@theia/workspace": "latest",
-    "@theia/plugin-ext-vscode": "latest",
-    "@theia/plugin-ext": "latest",
-    "@theia/mini-browser": "latest",
-    "@theia/git": "latest",
-    "@localizer/branding": "0.0.0",
-    "@localizer/core": "0.0.0",
-    "@localizer/arb": "0.0.0"
+    "@theia/workspace": "latest"
   },
   "devDependencies": {
-    "@theia/cli": "latest"
+    "@theia/cli": "latest",
+    "electron-builder": "22.8.0"
   },
   "scripts": {
     "prepare": "theia build --mode development",
     "start": "theia start",
     "watch": "theia build --watch --mode development",
-    "clean": "rimraf lib"
+    "clean": "rimraf lib",
+    "clean:dist": "rimraf dist",
+    "package": "electron-builder --linux"
   },
   "theia": {
     "target": "electron",
