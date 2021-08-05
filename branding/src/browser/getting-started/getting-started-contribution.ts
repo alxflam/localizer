@@ -1,17 +1,8 @@
 import { injectable, inject } from 'inversify';
-import { CommandRegistry, MenuModelRegistry } from '@theia/core/lib/common';
-import { CommonMenus, AbstractViewContribution, FrontendApplicationContribution, FrontendApplication } from '@theia/core/lib/browser';
-import { GettingStartedWidget } from './getting-started-widget';
+import { AbstractViewContribution, FrontendApplicationContribution, FrontendApplication } from '@theia/core/lib/browser';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
-
-/**
- * Triggers opening the `GettingStartedWidget`.
- */
-export const GettingStartedCommand = {
-    id: GettingStartedWidget.ID,
-    label: GettingStartedWidget.LABEL
-};
+import { GettingStartedWidget } from '@theia/getting-started/lib/browser/getting-started-widget';
 
 @injectable()
 export class GettingStartedContribution extends AbstractViewContribution<GettingStartedWidget> implements FrontendApplicationContribution {
@@ -41,19 +32,19 @@ export class GettingStartedContribution extends AbstractViewContribution<Getting
         }
     }
 
-    registerCommands(registry: CommandRegistry): void {
-        // register a command which opens the getting started view
-        registry.registerCommand(GettingStartedCommand, {
-            execute: () => this.openView({ reveal: true }),
-        });
-    }
+    // registerCommands(registry: CommandRegistry): void {
+    //     // register a command which opens the getting started view
+    //     registry.registerCommand(GettingStartedCommand, {
+    //         execute: () => this.openView({ reveal: true }),
+    //     });
+    // }
 
-    registerMenus(menus: MenuModelRegistry): void {
-        // add possibility to manually open the getting started view via a help menu entry
-        menus.registerMenuAction(CommonMenus.HELP, {
-            commandId: GettingStartedCommand.id,
-            label: GettingStartedCommand.label,
-            order: 'a10'
-        });
-    }
+    // registerMenus(menus: MenuModelRegistry): void {
+    //     // add possibility to manually open the getting started view via a help menu entry
+    //     menus.registerMenuAction(CommonMenus.HELP, {
+    //         commandId: GettingStartedCommand.id,
+    //         label: GettingStartedCommand.label,
+    //         order: 'a10'
+    //     });
+    // }
 }

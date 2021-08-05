@@ -12,6 +12,7 @@
   "dependencies": {
     "@theia/core": "latest",
     "@theia/filesystem": "latest",
+    "@theia/getting-started": "^1.16.0",
     "@theia/keymaps": "latest",
     "@theia/workspace": "latest"
   },

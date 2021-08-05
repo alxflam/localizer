@@ -1331,6 +1331,16 @@
     uuid "^8.0.0"
     vscode-languageserver-textdocument "^1.0.1"
 
+"@theia/getting-started@^1.16.0":
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/@theia/getting-started/-/getting-started-1.16.0.tgz#5c9229b4f59c6e40d40be8b3430fd0b5e2357cb6"
+  integrity sha512-fpWrMqNJ4DR5D/v+RgtzVTXGvy2brnKKvEKMbw3tlL4HcAZ7/H1ZJrr7aSkwesoal65ExYPQnTiaj1Qdt2Si3g==
+  dependencies:
+    "@theia/core" "1.16.0"
+    "@theia/filesystem" "1.16.0"
+    "@theia/keymaps" "1.16.0"
+    "@theia/workspace" "1.16.0"
+
 "@theia/git@latest":
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/@theia/git/-/git-1.16.0.tgz#f01890edcba5270b4a47d79b17a1a777ba85ceae"
@@ -1355,7 +1365,7 @@
     p-queue "^2.4.2"
     ts-md5 "^1.2.2"
 
-"@theia/keymaps@latest":
+"@theia/keymaps@1.16.0", "@theia/keymaps@latest":
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/@theia/keymaps/-/keymaps-1.16.0.tgz#b386e0e48382c447493bf39d532ed1fc3cc00eb0"
   integrity sha512-i6XKn5D6UZeItro7mr7QBJKmEAvovx1hgZQBZ96Jd5mX//wIVOve0AmDdK9dNWEZg/C6u3AUR/wG4krWq6uefQ==
