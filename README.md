@@ -75,14 +75,16 @@ Launch `Start Electron Backend` configuration from VS code.
 - [X] Seperate packages into core, branding and format specific implementations, e.g. arb
 - [X] Change applicatonName from default
 - [X] Add git extension to app
-- [] Clean up Getting Started page
-- [] Translation Preview should allow editing
-- [] Translation Group View should allow editing
-- [] Translation Navigator should indicate status
-    - [] translated, missing translation, and their counts
-- [] Navigator double-click should open translation dialog
-- [] Add translation provides
-    - [] Google Translate
-    - [] Deepl
-- [] Provide electron build
-- [] Automate electron build using github actions
+- [X] Reuse @theia/getting-started extension for branding extension
+- [X] Clean up Getting Started page
+- [X] Provide electron build for linux
+- [ ] Provide github actions for build
+- [ ] Translation Preview should allow editing
+- [ ] Translation Group View should allow editing
+- [ ] Translation Navigator should indicate status
+    - [ ] translated, missing translation, and their counts
+- [ ] Navigator double-click should open translation dialog for selected key
+- [ ] Add translation provides
+    - [ ] Google Translate
+    - [ ] Deepl
+- [ ] Automate electron build using github actions

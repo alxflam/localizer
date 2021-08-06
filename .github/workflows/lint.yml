@@ -1,0 +1,52 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+
+  build:
+    name: ${{ matrix.os }}, Node.js v${{ matrix.node }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04]
+        node: ['12.x']
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 
+          # see: https://github.com/lerna/lerna/issues/2542
+
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Use Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Build
+        shell: bash
+        run: |
+          yarn --network-timeout 100000
+
+      - name: Lint
+        shell: bash
+        run: |
+          yarn lint
