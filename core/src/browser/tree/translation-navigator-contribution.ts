@@ -32,7 +32,6 @@ export namespace TranslationNavigatorCommands {
 @injectable()
 export class TranslationNavigatorContribution extends AbstractViewContribution<TranslationNavigatorWidget> implements TabBarToolbarContribution {
 
-
     @inject(WorkspaceCommandContribution)
     protected readonly workspaceCommandContribution: WorkspaceCommandContribution;
 
@@ -64,7 +63,7 @@ export class TranslationNavigatorContribution extends AbstractViewContribution<T
             return;
         }
         const model: TranslationNavigatorModel = selfWidget.model;
-        model.refresh()
+        model.refresh();
     }
 
     async initializeLayout(app: FrontendApplication): Promise<void> {

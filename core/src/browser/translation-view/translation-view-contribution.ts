@@ -1,8 +1,8 @@
-import { Command, CommandRegistry } from "@theia/core";
-import { AbstractViewContribution, OpenViewArguments, FrontendApplication, FrontendApplicationContribution, OpenerService } from "@theia/core/lib/browser";
-import { inject, injectable } from "inversify";
-import { TranslationGroup } from "../../common/translation-types";
-import { TranslationViewWidget, TRANSLATION_VIEW_ID } from "./translation-view-widget";
+import { Command, CommandRegistry } from '@theia/core';
+import { AbstractViewContribution, OpenViewArguments, FrontendApplication, FrontendApplicationContribution, OpenerService } from '@theia/core/lib/browser';
+import { inject, injectable } from 'inversify';
+import { TranslationGroup } from '../../common/translation-types';
+import { TranslationViewWidget, TRANSLATION_VIEW_ID } from './translation-view-widget';
 
 export namespace TranslationViewCommands {
     export const OPEN_VIEW: Command = {
@@ -39,8 +39,8 @@ export class TranslationViewContribution extends AbstractViewContribution<Transl
         super.registerCommands(registry);
         registry.registerCommand(TranslationViewCommands.OPEN_VIEW, {
             execute: async (args: TranslationViewWidgetOptions) => {
-                args.activate = true
-                await this.openView(args)
+                args.activate = true;
+                await this.openView(args);
             }
         });
     }

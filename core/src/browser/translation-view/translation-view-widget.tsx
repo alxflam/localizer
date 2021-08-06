@@ -1,12 +1,12 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { injectable, inject, postConstruct } from "inversify";
-import { BaseWidget, LabelProvider, Message } from "@theia/core/lib/browser";
-import { MonacoEditorModel } from "@theia/monaco/lib/browser/monaco-editor-model";
-import { Disposable, Reference } from "@theia/core";
-import { TranslationManager } from "../translation-contribution-manager";
-import { TranslationGroup } from "../../common/translation-types";
-import { TranslationView } from "./translation-view";
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { injectable, inject, postConstruct } from 'inversify';
+import { BaseWidget, LabelProvider, Message } from '@theia/core/lib/browser';
+import { MonacoEditorModel } from '@theia/monaco/lib/browser/monaco-editor-model';
+import { Disposable, Reference } from '@theia/core';
+import { TranslationManager } from '../translation-contribution-manager';
+import { TranslationGroup } from '../../common/translation-types';
+import { TranslationView } from './translation-view';
 
 export const TRANSLATION_VIEW_ID = 'translation-view';
 
@@ -17,7 +17,7 @@ export class TranslationViewWidget extends BaseWidget {
     protected readonly translationManager: TranslationManager;
 
     @inject(LabelProvider)
-    protected readonly labelProvider: LabelProvider
+    protected readonly labelProvider: LabelProvider;
 
     protected viewNode: HTMLDivElement;
     protected reference: Reference<MonacoEditorModel> | undefined;
@@ -26,8 +26,8 @@ export class TranslationViewWidget extends BaseWidget {
     @postConstruct()
     protected async init(): Promise<void> {
         // const { group } = this.options;
-        this.id = TRANSLATION_VIEW_ID
-        this.title.label = 'Translate: ' // + group.name;
+        this.id = TRANSLATION_VIEW_ID;
+        this.title.label = 'Translate: '; // + group.name;
         this.title.closable = true;
 
         this.scrollOptions = {};
@@ -49,9 +49,9 @@ export class TranslationViewWidget extends BaseWidget {
         super.onUpdateRequest(message);
         const groups = this.translationManager.getTranslationGroups();
         if (groups.length > 0) {
-            this.group = groups[0]
+            this.group = groups[0];
         } else {
-            this.group = {} as TranslationGroup
+            this.group = {} as TranslationGroup;
         }
         // if (this.group) {
         ReactDOM.render(<TranslationView group={this.group} manager={this.translationManager}

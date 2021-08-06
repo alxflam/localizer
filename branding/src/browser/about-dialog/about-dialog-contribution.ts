@@ -3,7 +3,6 @@ import { CustomAboutDialog } from './about-dialog';
 import { CommonCommands } from '@theia/core/lib/browser';
 import { CommandContribution, CommandRegistry } from '@theia/core/lib/common/command';
 
-
 @injectable()
 export class CustomAboutDialogContribution implements CommandContribution {
 
@@ -22,5 +21,5 @@ export class CustomAboutDialogContribution implements CommandContribution {
             execute: () => this.openAbout()
         });
     }
-    
+
 }

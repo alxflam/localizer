@@ -8,7 +8,7 @@ import { TranslationManager } from '../translation-contribution-manager';
 export class TranslationNavigatorTree extends TreeImpl {
 
     @inject(TranslationManager)
-    protected readonly translationManager: TranslationManager
+    protected readonly translationManager: TranslationManager;
 
     protected resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
 
@@ -30,14 +30,14 @@ export class TranslationNavigatorTree extends TreeImpl {
         }
 
         if (TranslationKeyNode.is(parent)) {
-            //lazily query the service for details, like translated languages
+            // lazily query the service for details, like translated languages
         }
 
         return Promise.resolve([]);
     }
 
     protected toNodeId(group: TranslationGroup, parent: CompositeTreeNode): string {
-        return group.name
+        return group.name;
     }
 
     public createTranslationKeyNode(group: ITranslationTreeNodeData, parent: TranslationGroupRootNode): TreeNode {
@@ -56,7 +56,7 @@ export class TranslationNavigatorTree extends TreeImpl {
             parent: parent,
             key: key.key,
             selected: false
-        } as TranslationKeyNode
+        } as TranslationKeyNode;
     }
 
     public createTranslationGroupRoot(group: TranslationGroup, parent: TranslationTreeRootNode): TreeNode {

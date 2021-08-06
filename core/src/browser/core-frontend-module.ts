@@ -1,7 +1,7 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { CoreContribution } from './core-contribution';
 import { bindContributionProvider, MenuPath } from '@theia/core';
-import { bindViewContribution, defaultTreeProps, FrontendApplicationContribution, LabelProviderContribution, NavigatableWidgetOptions, OpenHandler, Tree, TreeModel, TreeProps, WidgetFactory } from "@theia/core/lib/browser";
+import { bindViewContribution, defaultTreeProps, FrontendApplicationContribution, LabelProviderContribution, NavigatableWidgetOptions, OpenHandler, Tree, TreeModel, TreeProps, WidgetFactory } from '@theia/core/lib/browser';
 import { TranslationFileOpenHandler } from './file-view/translation-file-open-handler';
 import { TranslationFileWidget, TranslationFileWidgetOptions } from './file-view/translation-file-widget';
 import { TranslationNavigatorContribution } from './tree/translation-navigator-contribution';
@@ -26,8 +26,8 @@ export default new ContainerModule(bind => {
     bind(TranslationManager).toSelf().inSingletonScope();
     // bind contribution provider
     bindContributionProvider(bind, TranslationSupport);
-    
-    //custom widget for editing a single translation resource
+
+    // custom widget for editing a single translation resource
     bind(TranslationFileOpenHandler).toSelf().inSingletonScope();
     bind(OpenHandler).toService(TranslationFileOpenHandler);
     bind(TranslationFileWidget).toSelf();
@@ -50,7 +50,7 @@ export default new ContainerModule(bind => {
 
     bind(TranslationTreeLabelProvider).toSelf().inSingletonScope();
     bind(LabelProviderContribution).toService(TranslationTreeLabelProvider);
-    
+
     bind(WidgetFactory).toDynamicValue(({ container }) => ({
         id: TRANSLATION_NAVIGATOR_ID,
         createWidget: () => createTranslationNavigatorWidget(container)

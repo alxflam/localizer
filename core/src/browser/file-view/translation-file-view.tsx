@@ -1,13 +1,13 @@
-import * as React from "react";
-import { JSONSchema6 } from "json-schema";
-import * as jsoncparser from "jsonc-parser";
-import { MonacoTextModelService } from "@theia/monaco/lib/browser/monaco-text-model-service";
-import { MonacoEditorModel } from "@theia/monaco/lib/browser/monaco-editor-model";
-import { DisposableCollection } from "@theia/core";
-import { ReferencedModelStorage } from "../referenced-model-storage";
+import * as React from 'react';
+import { JSONSchema6 } from 'json-schema';
+import * as jsoncparser from 'jsonc-parser';
+import { MonacoTextModelService } from '@theia/monaco/lib/browser/monaco-text-model-service';
+import { MonacoEditorModel } from '@theia/monaco/lib/browser/monaco-editor-model';
+import { DisposableCollection } from '@theia/core';
+import { ReferencedModelStorage } from '../referenced-model-storage';
 // import { ArbFileParser } from "../../../arb/src/browser/arb-file-parser";
-import { ITranslationEntry } from "../../common/translation-types";
-import { TranslationResourceParser } from "../../common/parser";
+import { ITranslationEntry } from '../../common/translation-types';
+import { TranslationResourceParser } from '../../common/parser';
 
 export class TranslationFileView extends React.Component<TranslationFileView.Props, TranslationFileView.State> {
 
@@ -20,7 +20,7 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
                 default: {}
             },
             formData: {}
-        }
+        };
         const { model, modelService } = props;
         this.schemaStorage = new ReferencedModelStorage(model, modelService, '$schema', { default: {} });
     }
@@ -31,13 +31,12 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
         // then just parse it
         // and display a form for each entry
         // enhance model: add line to each key entry
-        var entries: ITranslationEntry[] = []
+        let entries: ITranslationEntry[] = [];
         if (formData) {
             entries = this.props.parser.parseByContent(formData);
         }
         return <>
-            {entries.map((value, index) => {
-                return (
+            {entries.map((value, index) => (
                     <div key={index}>
                         <h3>{value.key}</h3>
                         <input
@@ -46,8 +45,7 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
                             value={value.value} />
                         <p>{value.description?.description}</p>
                     </div>
-                );
-            })}
+                ))}
         </>;
     }
 
@@ -62,9 +60,9 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
             return {
                 range: monaco.Range.fromPositions(start, end),
                 text: e.content
-            }
+            };
         }));
-    }
+    };
 
     protected readonly toDispose = new DisposableCollection();
 

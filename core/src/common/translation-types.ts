@@ -1,4 +1,4 @@
-import URI from "@theia/core/lib/common/uri";
+import URI from '@theia/core/lib/common/uri';
 
 export interface ITranslationTreeNodeData {
     key: string;

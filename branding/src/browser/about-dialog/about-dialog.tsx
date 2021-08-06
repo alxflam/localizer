@@ -1,4 +1,4 @@
-import { AboutDialog } from "@theia/core/lib/browser/about-dialog";
+import { AboutDialog } from '@theia/core/lib/browser/about-dialog';
 
 import * as React from 'react';
 import { injectable } from 'inversify';

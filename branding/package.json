@@ -26,7 +26,8 @@
     "clean": "rimraf lib",
     "build": "tsc",
     "watch": "tsc -w",
-    "lint": "eslint --ext js,jsx,ts,tsx src"
+    "lint": "eslint --ext js,jsx,ts,tsx src",
+    "lint:fix": "eslint --ext js,jsx,ts,tsx src --fix"
   },
   "theiaExtensions": [
     {

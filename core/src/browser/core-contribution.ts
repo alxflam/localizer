@@ -27,67 +27,67 @@ export class CoreContribution implements FrontendApplicationContribution {
     protected openHandler: TranslationFileOpenHandler;
 
     @inject(FrontendApplicationStateService)
-    protected stateService: FrontendApplicationStateService
+    protected stateService: FrontendApplicationStateService;
 
     @inject(ProblemManager)
-    protected problemManager: ProblemManager
+    protected problemManager: ProblemManager;
 
     @inject(MonacoWorkspace)
-    protected monacoWorkspace: MonacoWorkspace
+    protected monacoWorkspace: MonacoWorkspace;
 
     @inject(ContributionProvider)
     @named(TranslationSupport)
     protected readonly contributions: ContributionProvider<TranslationSupport>;
 
     @inject(TranslationManager)
-    protected readonly supportContributionManager: TranslationManager
+    protected readonly supportContributionManager: TranslationManager;
 
     protected readonly toDispose = new DisposableCollection();
 
     initialize() {
-        console.log("initialize core");
+        console.log('initialize core');
 
         // TODO: only initialize a TranslationManager here...
-        this.fileService.onDidFilesChange((event) => {
-            
-        })
+        this.fileService.onDidFilesChange(event => {
+
+        });
 
         // register listener for workspace changes
         this.toDispose.push(this.workspaceService.onWorkspaceChanged((files: FileStat[]) => {
             // set the workspace filestat on some manager and then lazily initialize once the translation view is opened
             // TODO: how about rename, file creation / deletion?
-            console.log('Workspace changed')
+            console.log('Workspace changed');
 
             for (const handler of this.getContributions()) {
                 // TODO: just set the first contribution as the active one ...
-                this.supportContributionManager.setTranslationSupport(handler)
-                handler.onWorkspaceChanged(files)
+                this.supportContributionManager.setTranslationSupport(handler);
+                handler.onWorkspaceChanged(files);
             }
-        }))
+        }));
 
-        this.toDispose.push(this.monacoWorkspace.onDidChangeTextDocument((event) => {
+        this.toDispose.push(this.monacoWorkspace.onDidChangeTextDocument(event => {
             for (const handler of this.getContributions()) {
-                handler.onDidChangeTextDocument(event.model, event.contentChanges)
+                handler.onDidChangeTextDocument(event.model, event.contentChanges);
             }
-        }))
+        }));
 
-        this.toDispose.push(this.monacoWorkspace.onDidOpenTextDocument((event) => {
+        this.toDispose.push(this.monacoWorkspace.onDidOpenTextDocument(event => {
             for (const handler of this.getContributions()) {
-                handler.onDidOpenTextDocument(event)
+                handler.onDidOpenTextDocument(event);
             }
-        }))
+        }));
 
-        this.toDispose.push(this.monacoWorkspace.onDidSaveTextDocument((event) => {
+        this.toDispose.push(this.monacoWorkspace.onDidSaveTextDocument(event => {
             for (const handler of this.getContributions()) {
-                handler.onDidSaveTextDocument(event)
+                handler.onDidSaveTextDocument(event);
             }
-        }))
+        }));
     }
 
     openInitialView() {
         // open first supported translation file on startup
         this.workspaceService.onWorkspaceChanged((files: FileStat[]) => {
-            console.log("Workspace changed");
+            console.log('Workspace changed');
 
             // return if theworkspace got closed?
             if (files.length === 0) {
@@ -100,20 +100,20 @@ export class CoreContribution implements FrontendApplicationContribution {
             }
 
             for (const handler of this.getContributions()) {
-                for(const item of files[0].children) {
-                    const supported = handler.supports(item.resource)
+                for (const item of files[0].children) {
+                    const supported = handler.supports(item.resource);
                     if (supported) {
-                        this.stateService.onStateChanged((state) => {
+                        this.stateService.onStateChanged(state => {
                             if (state === 'ready') {
                                 this.openHandler.open(item.resource);
                             }
-                        })
+                        });
                         // exit function, only open first translation resource
-                        return
+                        return;
                     }
                 }
             }
-            
+
             // const arbFiles = files[0].children?.filter(a => a.name.endsWith('.arb'));
             // if (arbFiles && arbFiles.length > 0) {
             //     console.log("Workspace with " + arbFiles.length) + " arb files opened, open view";
@@ -130,12 +130,12 @@ export class CoreContribution implements FrontendApplicationContribution {
     }
 
     onWillStop(app: FrontendApplication) {
-        this.toDispose.dispose()
+        this.toDispose.dispose();
     }
 
     async onStart(app: FrontendApplication): Promise<void> {
 
-        console.log("started core");
+        console.log('started core');
 
         // open arb translation if arb file is opened in editor
         app.shell.onDidAddWidget(widget => {
@@ -154,7 +154,6 @@ export class CoreContribution implements FrontendApplicationContribution {
             }
         });
     }
-
 
     protected getContributions(): TranslationSupport[] {
         return this.contributions.getContributions();

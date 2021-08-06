@@ -1,7 +1,7 @@
-import * as React from "react";
-import { DisposableCollection } from "@theia/core";
-import { ITranslationTreeNodeData, TranslationGroup } from "../../common/translation-types";
-import { TranslationManager } from "../translation-contribution-manager";
+import * as React from 'react';
+import { DisposableCollection } from '@theia/core';
+import { ITranslationTreeNodeData, TranslationGroup } from '../../common/translation-types';
+import { TranslationManager } from '../translation-contribution-manager';
 
 export class TranslationView extends React.Component<TranslationView.Props, TranslationView.State> {
 
@@ -9,7 +9,7 @@ export class TranslationView extends React.Component<TranslationView.Props, Tran
         super(props);
         this.state = {
             keys: []
-        }
+        };
 
     }
 
@@ -26,8 +26,6 @@ export class TranslationView extends React.Component<TranslationView.Props, Tran
 
             // and the corresponding value
 
-
-
             return <>
 
                 <table>
@@ -37,24 +35,22 @@ export class TranslationView extends React.Component<TranslationView.Props, Tran
                         <th>German</th>
                     </thead>
                     <tbody>
-                        {keys.map((value, index) => {
-                            return (
+                        {keys.map((value, index) => (
                                 <tr>
                                     <td>{value.key}</td>
                                     <td>{value.key}</td>
                                     <td>{value.key}</td>
                                 </tr>
-                            );
-                        })}
+                            ))}
                     </tbody>
                 </table>
-            </>
+            </>;
         } else {
             return <>
                 <div>
                     <h3>No Translation Keys for {this.props.group.name}</h3>
                 </div>
-            </>
+            </>;
         }
 
     }
@@ -66,7 +62,7 @@ export class TranslationView extends React.Component<TranslationView.Props, Tran
     }
 
     protected async reconcileGroupData(): Promise<void> {
-        const keys = this.props.manager.getTranslationKeys(this.props.group)
+        const keys = this.props.manager.getTranslationKeys(this.props.group);
         this.setState({ keys });
     }
 

@@ -10,7 +10,6 @@ export const TranslationManager = Symbol('ITranslationManager');
 
 // TODO: contribution points for translation file formats...
 
-
 export interface ITranslationManager {
 
     /**
@@ -19,11 +18,11 @@ export interface ITranslationManager {
     getTranslationNodes(): void;
 
     /*
-    * Fired once a translation node changed (renamed, removed or addedS) 
+    * Fired once a translation node changed (renamed, removed or addedS)
     */
     onTranslationNodesChanged(): void;
 
-    onWorkspaceChanged(files: FileStat[]) : void;
+    onWorkspaceChanged(files: FileStat[]): void;
 
     onDidChangeTextDocument(model: MonacoEditorModel, event: TextDocumentContentChangeEvent[]): void;
 

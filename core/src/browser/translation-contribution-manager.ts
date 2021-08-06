@@ -14,25 +14,25 @@ export class TranslationManager {
     protected service: TranslationSupport;
 
     setTranslationSupport(instance: TranslationSupport) {
-        this.service = instance
+        this.service = instance;
     }
 
     getTranslationSupport(): TranslationSupport {
         if (this.service === undefined) {
-            throw 'No TranslationSupport instance is active!'
+            throw 'No TranslationSupport instance is active!';
         }
-        return this.service
+        return this.service;
     }
 
     getTranslationSupportForURI(uri: URI): TranslationSupport {
-        var result: TranslationSupport | undefined;
+        let result: TranslationSupport | undefined;
         for (const handler of this.contributions.getContributions()) {
             if (handler.supports(uri)) {
                 result = handler;
             }
         }
         if (result === undefined) {
-            throw 'No TranslationSupport instance supports the resource ' + uri
+            throw 'No TranslationSupport instance supports the resource ' + uri;
         }
         return result;
     }
@@ -50,7 +50,7 @@ export class TranslationManager {
                     name: 'Nothing there yet',
                     resources: []
                 }
-            ]
+            ];
         }
         return groups;
     }

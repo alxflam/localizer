@@ -1,9 +1,9 @@
-import URI from "@theia/core/lib/common/uri";
-import * as jsoncparser from "jsonc-parser";
-import { MonacoTextModelService } from "@theia/monaco/lib/browser/monaco-text-model-service";
-import { MonacoEditorModel } from "@theia/monaco/lib/browser/monaco-editor-model";
-import { DisposableCollection, Emitter, Disposable, Path } from "@theia/core";
-import { JSONValue, JSONExt } from "@phosphor/coreutils";
+import URI from '@theia/core/lib/common/uri';
+import * as jsoncparser from 'jsonc-parser';
+import { MonacoTextModelService } from '@theia/monaco/lib/browser/monaco-text-model-service';
+import { MonacoEditorModel } from '@theia/monaco/lib/browser/monaco-editor-model';
+import { DisposableCollection, Emitter, Disposable, Path } from '@theia/core';
+import { JSONValue, JSONExt } from '@phosphor/coreutils';
 
 export class ReferencedModelStorage<T> implements Disposable {
 
@@ -41,7 +41,7 @@ export class ReferencedModelStorage<T> implements Disposable {
         this.referencedModel = reference.object;
         this.toDispose.push(Disposable.create(() => this.referencedModel = undefined));
         this.toDispose.push(Disposable.create(() => this.referencedModel?.onDidChangeContent(() => this.reconcile())));
-        
+
         this.reconcile();
     }
 

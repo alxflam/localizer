@@ -8,7 +8,7 @@ import { ProgressService } from '@theia/core';
 import { TranslationManager } from '../translation-contribution-manager';
 import { CommandService } from '@theia/core/lib/common/command';
 import { TranslationViewCommands } from '../translation-view/translation-view-contribution';
-    
+
 @injectable()
 export class TranslationNavigatorModel extends TranslationTreeModel {
 
@@ -25,7 +25,7 @@ export class TranslationNavigatorModel extends TranslationTreeModel {
     protected readonly progressService: ProgressService;
 
     @inject(TranslationManager)
-    protected readonly translationManager: TranslationManager
+    protected readonly translationManager: TranslationManager;
 
     @inject(CommandService)
     protected readonly commandService: CommandService;
@@ -35,7 +35,6 @@ export class TranslationNavigatorModel extends TranslationTreeModel {
         super.init();
         this.initializeRoot();
     }
-
 
     protected async initializeRoot(): Promise<void> {
         await Promise.all([
@@ -79,7 +78,7 @@ export class TranslationNavigatorModel extends TranslationTreeModel {
             for (const group of groups) {
                 node.children.push(this.tree.createTranslationGroupRoot(group, node));
             }
-            return node
+            return node;
         }
     }
 
@@ -89,7 +88,7 @@ export class TranslationNavigatorModel extends TranslationTreeModel {
         }
         // open translation view on double click
         if (TranslationGroupRootNode.is(node)) {
-            this.commandService.executeCommand(TranslationViewCommands.OPEN_VIEW.id, {'group': node.group })
+            this.commandService.executeCommand(TranslationViewCommands.OPEN_VIEW.id, {'group': node.group });
         }
         if (TranslationKeyNode.is(node)) {
 

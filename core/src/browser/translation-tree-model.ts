@@ -34,7 +34,6 @@ export class TranslationTreeModel extends TreeModelImpl {
         return nodes.size !== 0;
     }
 
-
     protected getAffectedUris(changes: FileChangesEvent): URI[] {
         return changes.changes.filter(change => !this.isFileContentChanged(change)).map(change => change.resource);
     }
@@ -67,8 +66,5 @@ export class TranslationTreeModel extends TreeModelImpl {
         // }
         return false;
     }
-
-
-
 
 }

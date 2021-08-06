@@ -5,7 +5,6 @@ import { SelectionService } from '@theia/core';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
 import * as React from 'react';
 
-
 export const TRANSLATION_NAVIGATOR_ID = 'translation';
 export const TRANSLATION_VIEW_CONTAINER_ID = 'translation-view-container';
 export const TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
@@ -19,7 +18,6 @@ export const CLASS = 'localizer-Translation';
 
 @injectable()
 export class TranslationNavigatorWidget extends TreeWidget {
-
 
     constructor(
         @inject(TreeProps) readonly props: TreeProps,
