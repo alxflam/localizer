@@ -44,7 +44,7 @@ export class CoreContribution implements FrontendApplicationContribution {
 
     protected readonly toDispose = new DisposableCollection();
 
-    initialize() {
+    public initialize(): void {
         console.log('initialize core');
 
         // TODO: only initialize a TranslationManager here...
@@ -84,7 +84,7 @@ export class CoreContribution implements FrontendApplicationContribution {
         }));
     }
 
-    openInitialView() {
+    public openInitialView(): void {
         // open first supported translation file on startup
         this.workspaceService.onWorkspaceChanged((files: FileStat[]) => {
             console.log('Workspace changed');
@@ -129,7 +129,7 @@ export class CoreContribution implements FrontendApplicationContribution {
         });
     }
 
-    onWillStop(app: FrontendApplication) {
+    public onWillStop(app: FrontendApplication): void {
         this.toDispose.dispose();
     }
 

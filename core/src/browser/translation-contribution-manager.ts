@@ -13,7 +13,7 @@ export class TranslationManager {
 
     protected service: TranslationSupport;
 
-    setTranslationSupport(instance: TranslationSupport) {
+    public setTranslationSupport(instance: TranslationSupport): void {
         this.service = instance;
     }
 

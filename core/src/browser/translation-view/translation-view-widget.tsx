@@ -40,7 +40,7 @@ export class TranslationViewWidget extends BaseWidget {
         this.update();
     }
 
-    setGroup(group: TranslationGroup | undefined) {
+    public setGroup(group: TranslationGroup | undefined): void {
         this.group = group;
         this.update();
     }

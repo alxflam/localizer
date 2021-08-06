@@ -1,7 +1,16 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { CoreContribution } from './core-contribution';
 import { bindContributionProvider, MenuPath } from '@theia/core';
-import { bindViewContribution, defaultTreeProps, FrontendApplicationContribution, LabelProviderContribution, NavigatableWidgetOptions, OpenHandler, Tree, TreeModel, TreeProps, WidgetFactory } from '@theia/core/lib/browser';
+import { bindViewContribution,
+    defaultTreeProps,
+    FrontendApplicationContribution,
+    LabelProviderContribution,
+    NavigatableWidgetOptions,
+    OpenHandler,
+    Tree,
+    TreeModel,
+    TreeProps,
+    WidgetFactory } from '@theia/core/lib/browser';
 import { TranslationFileOpenHandler } from './file-view/translation-file-open-handler';
 import { TranslationFileWidget, TranslationFileWidgetOptions } from './file-view/translation-file-widget';
 import { TranslationNavigatorContribution } from './tree/translation-navigator-contribution';
