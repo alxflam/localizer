@@ -14,14 +14,15 @@
     "@theia/core": "latest"
   },
   "devDependencies": {
-    "rimraf": "latest",
+    "rimraf": "^3.0.2",
     "typescript": "latest"
   },
   "scripts": {
     "prepare": "yarn run clean && yarn run build",
     "clean": "rimraf lib",
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "lint": "eslint --ext js,jsx,ts,tsx src"
   },
   "theiaExtensions": [
     {
