@@ -100,8 +100,8 @@
         {
           "rules": {
             "file-header": [
-              true,
-              "SPDX-License-Identifier: EPL-2\\.0 OR GPL-2\\.0 WITH Classpath-exception-2\\.0"
+              false,
+              "SPDX-License-Identifier: EPL-2\\.0"
             ],
             "jsdoc-format": [
               true,
@@ -130,7 +130,7 @@
           }
         }
       ],
-      "import/no-extraneous-dependencies": "error"
+      "import/no-extraneous-dependencies": "off"
     },
     "overrides": [
       {
