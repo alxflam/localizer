@@ -1,22 +1,21 @@
-import { ITranslationEntry, ITranslationKeyDescription } from "@localizer/core/src/common/translation-types";
-import { TranslationResourceParser } from "@localizer/core/src/common/parser";
-import * as jsoncparser from "jsonc-parser";
+import { ITranslationEntry, ITranslationKeyDescription } from '@localizer/core/src/common/translation-types';
+import { TranslationResourceParser } from '@localizer/core/src/common/parser';
+import * as jsoncparser from 'jsonc-parser';
         // import { FileUri } from '@theia/core/lib/node/file-uri';
         // import * as fs from 'fs-extra';
-import { inject, injectable } from "inversify";
-import URI from "@theia/core/lib/common/uri";
+import { inject, injectable } from 'inversify';
+import URI from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
 @injectable()
 export class ArbFileParser implements TranslationResourceParser {
 
     @inject(FileService)
-    protected fileService: FileService
-
+    protected fileService: FileService;
 
     async parseByURI(uri: URI): Promise<ITranslationEntry[]> {
         // read file contents from disk
-        const fileContent = await this.fileService.readFile(uri, 'utf-8') 
+        const fileContent = await this.fileService.readFile(uri, 'utf-8');
         // transform to string
         const content = fileContent.value.toString();
         // parse as json
@@ -31,8 +30,8 @@ export class ArbFileParser implements TranslationResourceParser {
 
         // process every key of the json
         for (const [key, value] of Object.entries(content)) {
-            const isTranslation = typeof value === "string";
-            if (key.startsWith("@@")) {
+            const isTranslation = typeof value === 'string';
+            if (key.startsWith('@@')) {
                 // a metadata key, ignore for now
                 continue;
             } else if (isTranslation) {
@@ -50,7 +49,7 @@ export class ArbFileParser implements TranslationResourceParser {
                     // description node exists, update the translation value
                     entry.value = value as string;
                 }
-            } else if (key.startsWith("@")) {
+            } else if (key.startsWith('@')) {
                 // it's a description node
                 const keyValue = value as any;
                 // get the parsed node, if already existing, by removing the leading '@'
@@ -65,7 +64,7 @@ export class ArbFileParser implements TranslationResourceParser {
                 } else {
                     // create the translation entry with empty values
                     // likely that the tarnslation value entry is written later
-                    result.set(key, { line: 1, key: key, value: "", description: description });
+                    result.set(key, { line: 1, key: key, value: '', description: description });
                 }
             }
         }

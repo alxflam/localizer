@@ -21,82 +21,82 @@ interface valueType {
 export class ArbTranslationSupport implements TranslationSupport {
 
     @inject(ArbFileParser)
-    protected readonly parser: ArbFileParser
+    protected readonly parser: ArbFileParser;
 
-    protected parseResult = new Map<string, valueType>()
+    protected parseResult = new Map<string, valueType>();
 
     supportedExtensions(): MaybePromise<string | string[]> {
-        return 'arb'
+        return 'arb';
     }
 
     supports(uri: URI): boolean {
-        return uri.scheme === 'file' && uri.path.ext === '.arb'
+        return uri.scheme === 'file' && uri.path.ext === '.arb';
     }
 
     getParser(): TranslationResourceParser {
-        return this.parser
+        return this.parser;
     }
 
     getTranslationManager(): ITranslationManager {
-        return this
+        return this;
     }
 
-    getTranslationNodes() {
-
-    }
-
-    onTranslationNodesChanged() {
+    getTranslationNodes(): void {
 
     }
 
-    onWorkspaceChanged(files: FileStat[]) : void {
+    onTranslationNodesChanged(): void {
+
+    }
+
+    onWorkspaceChanged(files: FileStat[]): void {
         // initially, parse all files async
         if (files.length === 0) {
-            return
+            return;
         }
 
-        this.processWorkspaceRoot(files[0])
+        this.processWorkspaceRoot(files[0]);
     }
 
-    async processWorkspaceRoot(root: FileStat) {
-        root.children?.forEach(async (child) => {
+    async processWorkspaceRoot(root: FileStat): Promise<void> {
+        root.children?.forEach(async child => {
             if (child.isFile && this.supports(child.resource)) {
-               const parsedResource = await this.getParser().parseByURI(child.resource)
-               this.parseResult.set(child.resource.toString(), {uri: child.resource, fileStat: child, entries: parsedResource })
+               const parsedResource = await this.getParser().parseByURI(child.resource);
+               this.parseResult.set(child.resource.toString(), {uri: child.resource, fileStat: child, entries: parsedResource });
             }
-        })
+        });
     }
 
     onDidChangeTextDocument(model: MonacoEditorModel, event: TextDocumentContentChangeEvent[]): void {
         // update the cached state of the parsed doc
-        if(!this.supports(new URI(model.uri))) {
-            return
+        if (!this.supports(new URI(model.uri))) {
+            return;
         }
-        
-        const entry = this.parseResult.get(model.uri.toString())
+
+        const entry = this.parseResult.get(model.uri.toString());
         if (entry) {
             // TODO: changes are not yet written to disk, so likely the event needs to be used instead
-            const parsedResource = this.getParser().parseByContent(model.getText())
-            entry.entries = parsedResource
+            const parsedResource = this.getParser().parseByContent(model.getText());
+            entry.entries = parsedResource;
         }
     }
 
     onDidOpenTextDocument(model: MonacoEditorModel): void {
         // check whether the cached state is outdated and update if required
-        if(!this.supports(new URI(model.uri))) {
-            return
+        if (!this.supports(new URI(model.uri))) {
+            return;
         }
 
-        const entry = this.parseResult.get(model.uri.toString())
+        const entry = this.parseResult.get(model.uri.toString());
         if (!entry) {
-            console.log('file opened which is not yet parsed!!')
+            console.log('file opened which is not yet parsed!!');
         }
     }
 
     onDidSaveTextDocument(model: MonacoEditorModel): void {
         // update the cached state of the parsed doc
-        if(!this.supports(new URI(model.uri))) {
-            return
+        if (!this.supports(new URI(model.uri))) {
+            return;
         }
     }
 
@@ -105,29 +105,29 @@ export class ArbTranslationSupport implements TranslationSupport {
     }
 
     getTranslationGroups(): TranslationGroup[] {
-        let groupNames = new Set();
+        const groupNames = new Set();
         for (const resource of this.parseResult.entries()) {
-            let name = resource[1].fileStat.name
-            const index = name.lastIndexOf('_')
+            let name = resource[1].fileStat.name;
+            const index = name.lastIndexOf('_');
             if (index > -1) {
-                name = name.substring(0, index)
+                name = name.substring(0, index);
             }
-            groupNames.add(name)
+            groupNames.add(name);
         }
 
         return Array.from(groupNames).map(a => <TranslationGroup>{ name: a, resources: [] });
     }
 
     getTranslationKeys(group: TranslationGroup): ITranslationTreeNodeData[] {
-        let keys = new Set();
+        const keys = new Set();
         for (const resource of this.parseResult.entries()) {
-            let name = resource[1].fileStat.name
-            const index = name.lastIndexOf('_')
+            let name = resource[1].fileStat.name;
+            const index = name.lastIndexOf('_');
             if (index > -1) {
-                name = name.substring(0, index)
+                name = name.substring(0, index);
             }
             if (name === group.name) {
-                resource[1].entries.map(item => item.key).forEach(a => keys.add(a))
+                resource[1].entries.map(item => item.key).forEach(a => keys.add(a));
             }
         }
 
@@ -135,21 +135,21 @@ export class ArbTranslationSupport implements TranslationSupport {
     }
 
     getTranslationEntries(group: TranslationGroup): ITranslationGroupData {
-        const result: ITranslationGroupData = { 
+        const result: ITranslationGroupData = {
             languages : new Map(),
             data : [],
         };
-        
-        let keys = new Set();
+
+        const keys = new Set();
 
         for (const resource of this.parseResult.entries()) {
-            let name = resource[1].fileStat.name
-            const index = name.lastIndexOf('_')
+            let name = resource[1].fileStat.name;
+            const index = name.lastIndexOf('_');
             if (index > -1) {
-                name = name.substring(0, index)
+                name = name.substring(0, index);
             }
             if (name === group.name) {
-                resource[1].entries.map(item => item.key).forEach(a => keys.add(a))
+                resource[1].entries.map(item => item.key).forEach(a => keys.add(a));
             }
         }
 

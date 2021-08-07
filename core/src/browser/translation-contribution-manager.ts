@@ -19,7 +19,7 @@ export class TranslationManager {
 
     getTranslationSupport(): TranslationSupport {
         if (this.service === undefined) {
-            throw 'No TranslationSupport instance is active!';
+            throw new Error('No TranslationSupport instance is active!');
         }
         return this.service;
     }
@@ -32,7 +32,7 @@ export class TranslationManager {
             }
         }
         if (result === undefined) {
-            throw 'No TranslationSupport instance supports the resource ' + uri;
+            throw new Error('No TranslationSupport instance supports the resource ' + uri);
         }
         return result;
     }

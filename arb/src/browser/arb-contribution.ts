@@ -4,8 +4,8 @@ import { injectable } from 'inversify';
 @injectable()
 export class CoreContribution implements FrontendApplicationContribution {
 
-    initialize() {
-        console.log("initialize arb");
+    initialize(): void {
+        console.log('initialize arb');
     }
 
 }
