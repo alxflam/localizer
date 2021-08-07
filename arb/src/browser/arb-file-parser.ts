@@ -24,6 +24,7 @@ export class ArbFileParser implements TranslationResourceParser {
         return this.parseByContent(json);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parseByContent(content: any): ITranslationEntry[] {
         // create an intermediary result structure: the translation key and it's assigned value
         const result = new Map<string, ITranslationEntry>();
@@ -51,6 +52,7 @@ export class ArbFileParser implements TranslationResourceParser {
                 }
             } else if (key.startsWith('@')) {
                 // it's a description node
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const keyValue = value as any;
                 // get the parsed node, if already existing, by removing the leading '@'
                 const entry = result.get(key.substring(1, key.length));

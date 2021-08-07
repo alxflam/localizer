@@ -64,7 +64,7 @@ export class TranslationFileWidget extends BaseWidget implements NavigatableWidg
         const model = this.reference && this.reference.object;
         ReactDOM.render(model ? <TranslationFileView model={model} modelService={this.modelService}
                 parser={this.translationSupport.getTranslationSupportForURI(this.options.uri).getParser()}
-            /> : null!, this.viewNode);
+            /> : undefined!, this.viewNode);
     }
 
     getResourceUri(): URI | undefined {

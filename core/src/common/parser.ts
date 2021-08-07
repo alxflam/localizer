@@ -9,6 +9,7 @@ export interface TranslationResourceParser {
     /*
     * Parse the given resource content
     */
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parseByContent(content: any): ITranslationEntry[];
 
     /*

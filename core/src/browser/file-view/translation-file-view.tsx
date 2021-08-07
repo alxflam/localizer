@@ -98,6 +98,6 @@ export namespace TranslationFileView {
     }
     export interface State {
         schema: JSONSchema6
-        formData: any
+        formData: unknown
     }
 }
