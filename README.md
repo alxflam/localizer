@@ -1,3 +1,5 @@
+[![Lint](https://github.com/alxflam/localizer/actions/workflows/lint.yml/badge.svg)](https://github.com/alxflam/localizer/actions/workflows/lint.yml)
+
 # localizer
 Localization tool for ARB files built with Theia.
 
@@ -78,7 +80,7 @@ Launch `Start Electron Backend` configuration from VS code.
 - [X] Reuse @theia/getting-started extension for branding extension
 - [X] Clean up Getting Started page
 - [X] Provide electron build for linux
-- [ ] Provide github actions for build
+- [X] Provide GH action for linting
 - [ ] Translation Preview should allow editing
 - [ ] Translation Group View should allow editing
 - [ ] Translation Navigator should indicate status
