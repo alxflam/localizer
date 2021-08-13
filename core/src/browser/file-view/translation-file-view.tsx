@@ -5,9 +5,9 @@ import { MonacoTextModelService } from '@theia/monaco/lib/browser/monaco-text-mo
 import { MonacoEditorModel } from '@theia/monaco/lib/browser/monaco-editor-model';
 import { DisposableCollection } from '@theia/core';
 import { ReferencedModelStorage } from '../referenced-model-storage';
-// import { ArbFileParser } from "../../../arb/src/browser/arb-file-parser";
 import { ITranslationEntry } from '../../common/translation-types';
 import { TranslationResourceParser } from '../../common/parser';
+import { ChangeEventHandler } from '@theia/core/shared/react';
 
 export class TranslationFileView extends React.Component<TranslationFileView.Props, TranslationFileView.State> {
 
@@ -23,6 +23,7 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
         };
         const { model, modelService } = props;
         this.schemaStorage = new ReferencedModelStorage(model, modelService, '$schema', { default: {} });
+        this.onChange = this.onChange.bind(this);
     }
 
     render(): JSX.Element | null {
@@ -42,18 +43,30 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
                         <input
                             key={value.key}
                             className="form-control"
-                            value={value.value} />
+                            value={value.value}
+                            onChange={event => this.onChange(event, value.key)}
+                            />
                         <p>{value.description?.description}</p>
                     </div>
                 ))}
         </>;
     }
 
-    protected submit = () => {
+    onChange(event: React.FormEvent<HTMLInputElement>, key: string): ChangeEventHandler<HTMLInputElement> | undefined {
+        // TODO add params, update internal model - this.state.formData (how..create json and replace?), then on save only trigger persistence?
+        const val = event.currentTarget.value;
+        console.log(val);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { formData } = this.state as any;
+        formData[key] = val;
+
+        // then modify form data using new value
         const model = this.props.model.textEditorModel;
         const content = model.getValue();
         const formattingOptions = { tabSize: 2, insertSpaces: true, eol: '' };
-        const edits = jsoncparser.modify(content, [], this.state.formData, { formattingOptions });
+
+        // modify the single changed key
+        const edits = jsoncparser.modify(content, [key], val, { formattingOptions });
         model.applyEdits(edits.map(e => {
             const start = model.getPositionAt(e.offset);
             const end = model.getPositionAt(e.offset + e.length);
@@ -62,6 +75,8 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
                 text: e.content
             };
         }));
+
+        return undefined;
     };
 
     protected readonly toDispose = new DisposableCollection();
