@@ -6,6 +6,7 @@ Localization tool for ARB files built with Theia.
 ## Getting started
 
 Install prerequistes as described here: https://github.com/eclipse-theia/theia/blob/master/doc/Developing.md#prerequisites
+
 Install node-native-keymap as described here: https://github.com/Microsoft/node-native-keymap
 
 Install [nvm](https://github.com/creationix/nvm#install-script).
@@ -81,8 +82,10 @@ Launch `Start Electron Backend` configuration from VS code.
 - [X] Clean up Getting Started page
 - [X] Provide electron build for linux
 - [X] Provide GH action for linting
+- [X] Use a custom configuration drectory instead of .theia
 - [ ] Translation Preview should allow editing
-- [ ] Translation Group View should allow editing
+- [ ] Translation Group View should display all translations dynamically
+    - [ ] add editing
 - [ ] Translation Navigator should indicate status
     - [ ] translated, missing translation, and their counts
 - [ ] Navigator double-click should open translation dialog for selected key

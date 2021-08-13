@@ -28,7 +28,8 @@
   },
   "theiaExtensions": [
     {
-      "frontend": "lib/browser/core-frontend-module"
+      "frontend": "lib/browser/core-frontend-module",
+      "backend": "lib/node/core-backend-module"
     }
   ]
 }
