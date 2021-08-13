@@ -9,7 +9,7 @@ import { ArbFileParser } from './arb-file-parser';
 import { injectable, inject } from 'inversify';
 import { ITranslationEntry } from '@localizer/core/lib/common/translation-types';
 import { ITranslationManager } from '@localizer/core/lib/browser/translation-manager';
-import { ITranslationGroupData, ITranslationTreeNodeData, TranslationGroup } from '@localizer/core/src/common/translation-types';
+import { ITranslationEntryRoot, ITranslationGroupData, ITranslationTreeNodeData, TranslationGroup } from '@localizer/core/src/common/translation-types';
 
 interface valueType {
     uri: URI
@@ -61,8 +61,8 @@ export class ArbTranslationSupport implements TranslationSupport {
     async processWorkspaceRoot(root: FileStat): Promise<void> {
         root.children?.forEach(async child => {
             if (child.isFile && this.supports(child.resource)) {
-               const parsedResource = await this.getParser().parseByURI(child.resource);
-               this.parseResult.set(child.resource.toString(), {uri: child.resource, fileStat: child, entries: parsedResource });
+                const parsedResource = await this.getParser().parseByURI(child.resource);
+                this.parseResult.set(child.resource.toString(), { uri: child.resource, fileStat: child, entries: parsedResource });
             }
         });
     }
@@ -131,26 +131,57 @@ export class ArbTranslationSupport implements TranslationSupport {
             }
         }
 
-        return Array.from(keys).map(a => <ITranslationTreeNodeData>{ key: a});
+        return Array.from(keys).map(a => <ITranslationTreeNodeData>{ key: a });
     }
 
     getTranslationEntries(group: TranslationGroup): ITranslationGroupData {
         const result: ITranslationGroupData = {
-            languages : new Map(),
-            data : [],
+            languages: new Map(),
+            data: [],
         };
 
-        const keys = new Set();
+        // const keys = new Set();
 
         for (const resource of this.parseResult.entries()) {
-            let name = resource[1].fileStat.name;
+            // only process file if its part of the group
+            // TODO: the given group does not contain any URIs
+            // if (group.resources.indexOf(resource[1].uri) < 0) {
+            //     continue;
+            // }
+
+            const fileName = resource[1].fileStat.name;
+            let name = fileName;
+            let language = 'unknown';
             const index = name.lastIndexOf('_');
             if (index > -1) {
                 name = name.substring(0, index);
+                const suffix = fileName.substring(index, resource[1].fileStat.name.length);
+                const dotIndex = suffix.lastIndexOf('.');
+                language = suffix.substring(1, dotIndex);
             }
-            if (name === group.name) {
-                resource[1].entries.map(item => item.key).forEach(a => keys.add(a));
+
+            // verify group
+            if (name !== group.name) {
+                continue;
             }
+
+            // TODO test execution and creation...
+            for (const key of resource[1].entries) {
+
+                const keyData = result.data.find(i => i.key === key.key);
+                if (keyData) {
+                    keyData.data[language] = key.value;
+                } else {
+                    const keyDataNew: ITranslationEntryRoot = {
+                        key: key.key,
+                        description: key.description,
+                        data: {}
+                    };
+                    keyDataNew.data[language] = key.value;
+                    result.data.push(keyDataNew);
+                }
+            }
+            result.languages.set(language, resource[1].fileStat.name);
         }
 
         return result;

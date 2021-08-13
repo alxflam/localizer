@@ -5,14 +5,14 @@ export interface ITranslationTreeNodeData {
 }
 
 export interface ITranslationGroupData {
-    languages: Map<string, URI>;
+    languages: Map<string, string>;
     data: ITranslationEntryRoot[];
 }
 
 export interface ITranslationEntryRoot {
     key: string;
     description: ITranslationKeyDescription | undefined;
-    data: Map<string, ITranslationLanguageEntry>;
+    data: { [language: string]: string };
 }
 
 export interface ITranslationLanguageEntry {
