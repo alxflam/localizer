@@ -1,0 +1,9 @@
+html, body {
+    font-family: var(--theia-ui-font-family);
+}
+
+.localizer-translation-input {
+    background-color: var(--theia-quickInput-background);
+    border: 0;
+    color: var(--theia-foreground);
+}

@@ -26,6 +26,8 @@ import { TranslationViewWidget, TRANSLATION_VIEW_ID } from './translation-view/t
 import URI from '@theia/core/lib/common/uri';
 import { TranslationViewContribution } from './translation-view/translation-view-contribution';
 
+import '../../src/browser/style/index.css';
+
 export default new ContainerModule(bind => {
     // frontend contribution
     bind(CoreContribution).toSelf().inSingletonScope();

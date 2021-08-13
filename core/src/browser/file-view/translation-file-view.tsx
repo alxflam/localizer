@@ -42,7 +42,7 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
                         <h3>{value.key}</h3>
                         <input
                             key={value.key}
-                            className="form-control"
+                            className="localizer-translation-input"
                             value={value.value}
                             onChange={event => this.onChange(event, value.key)}
                             />
