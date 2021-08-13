@@ -83,7 +83,7 @@ Launch `Start Electron Backend` configuration from VS code.
 - [X] Provide electron build for linux
 - [X] Provide GH action for linting
 - [X] Use a custom configuration drectory instead of .theia
-- [ ] Translation file view shoudl itself provide a dirty state and be saveable
+- [X] Translation file view should itself provide a dirty state and be saveable
 - [ ] Styling for input fields in file view
 - [ ] Translation file view should display key metadata
 - [ ] Translation Preview should allow editing

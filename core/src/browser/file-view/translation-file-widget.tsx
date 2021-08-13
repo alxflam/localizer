@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { injectable, inject, postConstruct } from 'inversify';
-import { BaseWidget, LabelProvider, Message, NavigatableWidget } from '@theia/core/lib/browser';
+import { BaseWidget, LabelProvider, Message, NavigatableWidget, Saveable, SaveableSource } from '@theia/core/lib/browser';
 import URI from '@theia/core/lib/common/uri';
 import { MonacoTextModelService } from '@theia/monaco/lib/browser/monaco-text-model-service';
 import { MonacoEditorModel } from '@theia/monaco/lib/browser/monaco-editor-model';
@@ -15,7 +15,7 @@ export class TranslationFileWidgetOptions {
 }
 
 @injectable()
-export class TranslationFileWidget extends BaseWidget implements NavigatableWidget {
+export class TranslationFileWidget extends BaseWidget implements SaveableSource, NavigatableWidget {
 
     static id = 'translation-file-widget';
 
@@ -73,6 +73,19 @@ export class TranslationFileWidget extends BaseWidget implements NavigatableWidg
 
     createMoveToUri(resourceUri: URI): URI | undefined {
         return this.options.uri && this.options.uri.withPath(resourceUri.path);
+    }
+
+    /**
+     * The widget operates on a MonacoEditorModel, hence we can make it saveable.
+     * Therefore we can save directly in the widget without having to switch to the monaco editor.
+     * Furthermore the dirty decorator is present if modifications are made.
+     */
+    get saveable(): Saveable {
+        const model = this.reference && this.reference.object;
+        if (model) {
+            return model;
+        }
+        throw new Error('MonacoEditorModel could not be found');
     }
 
 }
