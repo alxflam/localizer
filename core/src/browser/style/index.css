@@ -6,4 +6,7 @@ html, body {
     background-color: var(--theia-quickInput-background);
     border: 0;
     color: var(--theia-foreground);
+    font-size: var(--theia-ui-font-size2);
+    padding: 0.5em;
+    width: 95%;
 }

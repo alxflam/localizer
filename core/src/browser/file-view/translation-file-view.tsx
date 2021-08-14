@@ -38,21 +38,26 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
         }
         return <>
             {entries.map((value, index) => (
-                    <div key={index}>
-                        <h3>{value.key}</h3>
-                        <input
-                            key={value.key}
-                            className="localizer-translation-input"
-                            value={value.value}
-                            onChange={event => this.onChange(event, value.key)}
-                            />
-                        <p>{value.description?.description}</p>
-                    </div>
-                ))}
+                <div key={index}>
+                    <h3>{value.key}</h3>
+                    {value.description && value.description.description && value.description.description.length > 0 ?
+                    <p>{value.description?.description}</p> : undefined
+                    }
+
+                    <textarea
+                        key={value.key}
+                        className="localizer-translation-input"
+                        value={value.value}
+                        placeholder="Translation..."
+                        onChange={event => this.onChange(event, value.key)}
+                    />
+                </div>
+            ))}
         </>;
     }
 
-    onChange(event: React.FormEvent<HTMLInputElement>, key: string): ChangeEventHandler<HTMLInputElement> | undefined {
+    // React.FormEvent<HTMLInputElement>
+    onChange(event: React.ChangeEvent<HTMLTextAreaElement>, key: string): ChangeEventHandler<HTMLInputElement> | undefined {
         // TODO add params, update internal model - this.state.formData (how..create json and replace?), then on save only trigger persistence?
         const val = event.currentTarget.value;
         console.log(val);
