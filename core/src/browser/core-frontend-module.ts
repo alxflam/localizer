@@ -1,7 +1,8 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { CoreContribution } from './core-contribution';
 import { bindContributionProvider, MenuPath } from '@theia/core';
-import { bindViewContribution,
+import {
+    bindViewContribution,
     defaultTreeProps,
     FrontendApplicationContribution,
     LabelProviderContribution,
@@ -10,7 +11,8 @@ import { bindViewContribution,
     Tree,
     TreeModel,
     TreeProps,
-    WidgetFactory } from '@theia/core/lib/browser';
+    WidgetFactory
+} from '@theia/core/lib/browser';
 import { TranslationFileOpenHandler } from './file-view/translation-file-open-handler';
 import { TranslationFileWidget, TranslationFileWidgetOptions } from './file-view/translation-file-widget';
 import { TranslationNavigatorContribution } from './tree/translation-navigator-contribution';
@@ -27,6 +29,10 @@ import URI from '@theia/core/lib/common/uri';
 import { TranslationViewContribution } from './translation-view/translation-view-contribution';
 
 import '../../src/browser/style/index.css';
+import { TranslationServiceManager } from './translator/translation-service-manager';
+import { TranslationService } from './translator/translation-service';
+import { DeeplTranslationService } from './translator/deepl-translation-service';
+import { bindDeeplPreferences } from './translator/deepl-preferences';
 
 export default new ContainerModule(bind => {
     // frontend contribution
@@ -83,6 +89,19 @@ export default new ContainerModule(bind => {
             return child.get(TranslationViewWidget);
         }
     })).inSingletonScope();
+
+    /**
+     * Translation Services
+     */
+
+    // bind the translation service manager for easy retrieval of translation services
+    bind(TranslationServiceManager).toSelf().inSingletonScope();
+    // bind contribution provider for the translation service
+    bindContributionProvider(bind, TranslationService);
+    // and bind the concrete deepl implementation
+    bind(TranslationService).to(DeeplTranslationService).inSingletonScope();
+    // bind DeepL preferences
+    bindDeeplPreferences(bind);
 
 });
 

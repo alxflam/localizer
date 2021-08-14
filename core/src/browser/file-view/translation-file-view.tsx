@@ -4,14 +4,15 @@ import * as jsoncparser from 'jsonc-parser';
 import { MonacoTextModelService } from '@theia/monaco/lib/browser/monaco-text-model-service';
 import { MonacoEditorModel } from '@theia/monaco/lib/browser/monaco-editor-model';
 import { DisposableCollection } from '@theia/core';
-import { ReferencedModelStorage } from '../referenced-model-storage';
 import { ITranslationEntry } from '../../common/translation-types';
 import { TranslationResourceParser } from '../../common/parser';
 import { ChangeEventHandler } from '@theia/core/shared/react';
+import { TranslationServiceManager } from '../translator/translation-service-manager';
+import { PreferenceService } from '@theia/core/lib/browser';
+import { prefDeeplApiKey } from '../translator/deepl-preferences';
+import { TranslationService } from '../translator/translation-service';
 
 export class TranslationFileView extends React.Component<TranslationFileView.Props, TranslationFileView.State> {
-
-    protected readonly schemaStorage: ReferencedModelStorage<JSONSchema6>;
 
     constructor(props: TranslationFileView.Props) {
         super(props);
@@ -21,13 +22,13 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
             },
             formData: {}
         };
-        const { model, modelService } = props;
-        this.schemaStorage = new ReferencedModelStorage(model, modelService, '$schema', { default: {} });
         this.onChange = this.onChange.bind(this);
     }
 
     render(): JSX.Element | null {
         const { formData } = this.state;
+        const translationServices = this.props.translationServiceManager.getTranslationServices();
+        // TODO: get language code, better at construction as won't ever change
         // once componentDidMount got fired we'll have the file content
         // then just parse it
         // and display a form for each entry
@@ -39,9 +40,15 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
         return <>
             {entries.map((value, index) => (
                 <div key={index}>
-                    <h3>{value.key}</h3>
+                    <div className="localizer-horizontal">
+                        <h3>{value.key}</h3>
+                        {translationServices.map(a => (
+                            <h4 onClick={event => this.onClickTranslate(a, value.key, value.value, 'DE')}>{a.getServiceName()}</h4>
+                        ))}
+                    </div>
+
                     {value.description && value.description.description && value.description.description.length > 0 ?
-                    <p>{value.description?.description}</p> : undefined
+                        <p>{value.description?.description}</p> : undefined
                     }
 
                     <textarea
@@ -84,21 +91,29 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
         return undefined;
     };
 
+    onClickTranslate(translationService: TranslationService, key: string, sourceValue: string, targetLanguage: string): void {
+        const apiKey = this.props.preferenceService.get<string>(prefDeeplApiKey);
+        console.log('Received API Key' + apiKey);
+
+        translationService.translate(sourceValue, undefined, targetLanguage).then(value => (
+            console.log('Translation returned ' + value)
+        ));
+
+        // TODO: instead of directly invoking translation, show a dialog so user can set source file for source values to be translated 
+        // and display of translation (so user can approve / edit / reject)
+    };
+
     protected readonly toDispose = new DisposableCollection();
 
     componentDidMount(): void {
-        this.toDispose.push(this.schemaStorage);
-        this.toDispose.push(this.schemaStorage.onDidChange(schema => this.setState({ schema })));
-
         this.reconcileFormData();
         this.toDispose.push(this.props.model.onDidChangeContent(() => this.reconcileFormData()));
     }
 
-    // componentWillMount(): void {
-    // }
     componentWillUnmount(): void {
         this.toDispose.dispose();
     }
+
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
         console.error(error);
     }
@@ -106,7 +121,6 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
     protected async reconcileFormData(): Promise<void> {
         const formData = jsoncparser.parse(jsoncparser.stripComments(this.props.model.getText())) || {};
         this.setState({ formData });
-        this.schemaStorage.update(formData);
     }
 
 }
@@ -115,6 +129,8 @@ export namespace TranslationFileView {
         model: MonacoEditorModel
         modelService: MonacoTextModelService
         parser: TranslationResourceParser
+        translationServiceManager: TranslationServiceManager
+        preferenceService: PreferenceService
     }
     export interface State {
         schema: JSONSchema6

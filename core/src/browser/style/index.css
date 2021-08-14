@@ -10,3 +10,10 @@ html, body {
     padding: 0.5em;
     width: 95%;
 }
+
+.localizer-horizontal {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }

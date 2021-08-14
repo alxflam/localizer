@@ -85,6 +85,7 @@ Launch `Start Electron Backend` configuration from VS code.
 - [X] Use a custom configuration drectory instead of .theia
 - [X] Translation file view should itself provide a dirty state and be saveable
 - [X] Basic styling for input fields in file view
+- [ ] Add new language resource
 - [ ] Translation file view should display key metadata
 - [ ] Translation Preview should allow editing
 - [ ] Translation Group View should display all translations dynamically
@@ -92,7 +93,8 @@ Launch `Start Electron Backend` configuration from VS code.
 - [ ] Translation Navigator should indicate status
     - [ ] translated, missing translation, and their counts
 - [ ] Navigator double-click should open translation dialog for selected key
-- [ ] Add translation provides
+- [ ] Add translation providers
+    - [X] Deepl
+        - [ ] Add support for multi value translation (in single request)
     - [ ] Google Translate
-    - [ ] Deepl
 - [ ] Automate electron build using github actions

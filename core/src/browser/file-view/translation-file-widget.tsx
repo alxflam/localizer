@@ -1,13 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { injectable, inject, postConstruct } from 'inversify';
-import { BaseWidget, LabelProvider, Message, NavigatableWidget, Saveable, SaveableSource } from '@theia/core/lib/browser';
+import { BaseWidget, LabelProvider, Message, NavigatableWidget, PreferenceService, Saveable, SaveableSource } from '@theia/core/lib/browser';
 import URI from '@theia/core/lib/common/uri';
 import { MonacoTextModelService } from '@theia/monaco/lib/browser/monaco-text-model-service';
 import { MonacoEditorModel } from '@theia/monaco/lib/browser/monaco-editor-model';
 import { Disposable, Reference } from '@theia/core';
 import { TranslationFileView } from './translation-file-view';
 import { TranslationManager } from '../translation-contribution-manager';
+import { TranslationServiceManager } from '../translator/translation-service-manager';
 
 @injectable()
 export class TranslationFileWidgetOptions {
@@ -22,8 +23,14 @@ export class TranslationFileWidget extends BaseWidget implements SaveableSource,
     @inject(TranslationManager)
     protected readonly translationSupport: TranslationManager;
 
+    @inject(TranslationServiceManager)
+    protected readonly translationServiceManager: TranslationServiceManager;
+
     @inject(TranslationFileWidgetOptions)
     protected readonly options: TranslationFileWidgetOptions;
+
+    @inject(PreferenceService)
+    protected readonly preferenceService: PreferenceService;
 
     @inject(LabelProvider)
     protected readonly labelProvider: LabelProvider;
@@ -62,9 +69,13 @@ export class TranslationFileWidget extends BaseWidget implements SaveableSource,
     protected onUpdateRequest(message: Message): void {
         super.onUpdateRequest(message);
         const model = this.reference && this.reference.object;
-        ReactDOM.render(model ? <TranslationFileView model={model} modelService={this.modelService}
-                parser={this.translationSupport.getTranslationSupportForURI(this.options.uri).getParser()}
-            /> : undefined!, this.viewNode);
+        ReactDOM.render(model ? <TranslationFileView
+            model={model}
+            modelService={this.modelService}
+            parser={this.translationSupport.getTranslationSupportForURI(this.options.uri).getParser()}
+            translationServiceManager={this.translationServiceManager}
+            preferenceService={this.preferenceService}
+        /> : undefined!, this.viewNode);
     }
 
     getResourceUri(): URI | undefined {
