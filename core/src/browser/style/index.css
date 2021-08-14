@@ -11,6 +11,15 @@ html, body {
     width: 95%;
 }
 
+.localizer-select {
+    background-color: var(--theia-quickInput-background);
+    border: 0;
+    color: var(--theia-foreground);
+    font-size: var(--theia-ui-font-size2);
+    padding: 0.5em;
+    width: 95%;
+}
+
 .localizer-translation-service-btn {
     height: fit-content;
 }
@@ -21,4 +30,4 @@ html, body {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-  }
+}

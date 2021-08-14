@@ -9,8 +9,8 @@ import { TranslationResourceParser } from '../../common/parser';
 import { ChangeEventHandler } from '@theia/core/shared/react';
 import { TranslationServiceManager } from '../translator/translation-service-manager';
 import { PreferenceService } from '@theia/core/lib/browser';
-import { prefDeeplApiKey } from '../translator/deepl-preferences';
 import { TranslationService } from '../translator/translation-service';
+import { TranslationDialog, TranslationDialogProps } from './translation-dialog';
 
 export class TranslationFileView extends React.Component<TranslationFileView.Props, TranslationFileView.State> {
 
@@ -44,7 +44,7 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
                         <h3>{value.key}</h3>
                         {translationServices.map(a => (
                             <button className="theia-button localizer-translation-service-btn"
-                                onClick={event => this.onClickTranslate(a, value.key, value.value, 'DE')}>{a.getServiceName()}</button>
+                                onClick={event => this.onClickTranslate(a, value, 'DE')}>{a.getServiceName()}</button>
                         ))}
                     </div>
 
@@ -92,16 +92,19 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
         return undefined;
     };
 
-    onClickTranslate(translationService: TranslationService, key: string, sourceValue: string, targetLanguage: string): void {
-        const apiKey = this.props.preferenceService.get<string>(prefDeeplApiKey);
-        console.log('Received API Key' + apiKey);
+    onClickTranslate(translationService: TranslationService, entry: ITranslationEntry, targetLanguage: string): void {
+        const dialogProperties = {
+            title: `Translate ${entry.key} to ${targetLanguage}`,
+            translationEntry: entry
+        } as TranslationDialogProps;
 
-        translationService.translate(sourceValue, undefined, targetLanguage).then(value => (
-            console.log('Translation returned ' + value)
-        ));
+        const dialog = new TranslationDialog(dialogProperties, this.props.translationServiceManager, this.props.preferenceService);
 
-        // TODO: instead of directly invoking translation, show a dialog so user can set source file for source values to be translated
-        // and display of translation (so user can approve / edit / reject)
+        dialog.open().then(async name => {
+            if (name) {
+              // then adapt value
+            }
+        });
     };
 
     protected readonly toDispose = new DisposableCollection();
