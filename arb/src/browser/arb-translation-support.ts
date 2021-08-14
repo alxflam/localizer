@@ -105,7 +105,7 @@ export class ArbTranslationSupport implements TranslationSupport {
     }
 
     getTranslationGroups(): TranslationGroup[] {
-        const groupNames = new Set();
+        const groupNames = new Set<string>();
         for (const resource of this.parseResult.entries()) {
             let name = resource[1].fileStat.name;
             const index = name.lastIndexOf('_');
@@ -115,7 +115,11 @@ export class ArbTranslationSupport implements TranslationSupport {
             groupNames.add(name);
         }
 
-        return Array.from(groupNames).map(a => <TranslationGroup>{ name: a, resources: [] });
+        // TODO needs to get cleaned up and simplified (directly populate a map name - uri[])
+        // TODO furthermore enhance model with info regarding the language of the resource... (so only th)
+        return Array.from(groupNames).map(a => <TranslationGroup>{
+            name: a,
+            resources: Array.from(this.parseResult.values()).filter(b => b.fileStat.name.includes(a)).map(b => b.uri) });
     }
 
     getTranslationKeys(group: TranslationGroup): ITranslationTreeNodeData[] {
