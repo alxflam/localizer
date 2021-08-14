@@ -3,6 +3,11 @@ import { injectable } from 'inversify';
 
 @injectable()
 export class DeeplTranslationService implements TranslationService {
+
+    getID(): string {
+        return 'localizer.translation.services.deepl';
+    }
+
     getServiceName(): string {
         return 'DeepL';
     }

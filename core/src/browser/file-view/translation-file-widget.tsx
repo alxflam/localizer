@@ -75,6 +75,7 @@ export class TranslationFileWidget extends BaseWidget implements SaveableSource,
             parser={this.translationSupport.getTranslationSupportForURI(this.options.uri).getParser()}
             translationServiceManager={this.translationServiceManager}
             preferenceService={this.preferenceService}
+            translationManager={this.translationSupport}
         /> : undefined!, this.viewNode);
     }
 

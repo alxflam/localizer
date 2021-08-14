@@ -10,16 +10,20 @@ import * as React from 'react';
 import { TranslationServiceManager } from '../translator/translation-service-manager';
 import { PreferenceService } from '@theia/core/lib/browser';
 import { ChangeEvent } from '@theia/core/shared/react';
+import { TranslationManager } from '../translation-contribution-manager';
 // import { TranslationService } from '../translator/translation-service';
 // import { TranslationDialog, TranslationDialogProps } from './translation-dialog';
 
 export namespace TranslationDialogComponent {
     export interface Props {
+        translationManager: TranslationManager
         translationServiceManager: TranslationServiceManager
         preferenceService: PreferenceService
+        targetLanguage: string
     }
     export interface State {
         selectedSource: string
+        sourceText: string
         translationService: string // TODO: add id to every service so it can be used as a key
     }
 }
@@ -30,10 +34,12 @@ export class TranslationDialogComponent extends React.Component<TranslationDialo
         super(props);
         this.state = {
             selectedSource: '',
+            sourceText: '',
             translationService: ''
         };
 
-        this.handleSourceChange = this.handleSourceChange.bind(this);
+        this.handleSourceTextChange = this.handleSourceTextChange.bind(this);
+        this.handleTranslationServiceChange = this.handleTranslationServiceChange.bind(this);
     }
 
     render(): JSX.Element | null {
@@ -54,28 +60,29 @@ export class TranslationDialogComponent extends React.Component<TranslationDialo
         // dropdown for selection service
 
         const translationServices = this.props.translationServiceManager.getTranslationServices();
+        const groups = this.props.translationManager.getTranslationGroups();
+        const firstGroup = groups[0];
 
         return <>
             <div>
                 <div>
-                    <select className="localizer-select" value={this.state.selectedSource} onChange={this.handleSourceChange}>
-                        <option value="grapefruit">Grapefruit</option>
-                        <option value="lime">Lime</option>
-                        <option value="coconut">Coconut</option>
-                        <option value="mango">Mango</option>
+                    <select className="localizer-select" value={this.state.selectedSource} onChange={this.handleSourceTextChange}>
+                        {firstGroup.resources.map(a => (
+                            <option value={a.path.toString()}>{a.path.name}</option>
+                        ))}
                     </select>
                 </div>
                 <div>
-                    <text>to be translated</text>
+                    <text>{this.state.sourceText}</text>
                 </div>
                 <div>
-                    <text>Target:</text>
-                    <text>DE als prop</text>
+                    <text>Target Language:</text>
+                    <text>{this.props.targetLanguage}</text>
                 </div>
                 <div>
-                    <select className="localizer-select" value={this.state.translationService} onChange={this.handleSourceChange}>
+                    <select className="localizer-select" value={this.state.translationService} onChange={this.handleTranslationServiceChange}>
                         {translationServices.map(a => (
-                            <option value={a.getServiceName()}>{a.getServiceName()}</option>
+                            <option value={a.getID()}>{a.getServiceName()}</option>
                         ))}
                     </select>
                 </div>
@@ -83,7 +90,13 @@ export class TranslationDialogComponent extends React.Component<TranslationDialo
         </>;
     }
 
-    handleSourceChange(event: ChangeEvent<HTMLSelectElement>): void {
+    handleTranslationServiceChange(event: ChangeEvent<HTMLSelectElement>): void {
+        this.setState(state => ({
+            translationService: event.currentTarget.value
+        }));
+    }
+
+    handleSourceTextChange(event: ChangeEvent<HTMLSelectElement>): void {
         this.setState(state => ({
             selectedSource: event.currentTarget.value
         }));

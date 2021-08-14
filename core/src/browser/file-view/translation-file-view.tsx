@@ -11,6 +11,7 @@ import { TranslationServiceManager } from '../translator/translation-service-man
 import { PreferenceService } from '@theia/core/lib/browser';
 import { TranslationService } from '../translator/translation-service';
 import { TranslationDialog, TranslationDialogProps } from './translation-dialog';
+import { TranslationManager } from '../translation-contribution-manager';
 
 export class TranslationFileView extends React.Component<TranslationFileView.Props, TranslationFileView.State> {
 
@@ -95,10 +96,11 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
     onClickTranslate(translationService: TranslationService, entry: ITranslationEntry, targetLanguage: string): void {
         const dialogProperties = {
             title: `Translate ${entry.key} to ${targetLanguage}`,
-            translationEntry: entry
+            translationEntry: entry,
+            targetLanguage: targetLanguage
         } as TranslationDialogProps;
 
-        const dialog = new TranslationDialog(dialogProperties, this.props.translationServiceManager, this.props.preferenceService);
+        const dialog = new TranslationDialog(dialogProperties, this.props.translationServiceManager, this.props.preferenceService, this.props.translationManager);
 
         dialog.open().then(async name => {
             if (name) {
@@ -135,6 +137,7 @@ export namespace TranslationFileView {
         parser: TranslationResourceParser
         translationServiceManager: TranslationServiceManager
         preferenceService: PreferenceService
+        translationManager: TranslationManager
     }
     export interface State {
         schema: JSONSchema6

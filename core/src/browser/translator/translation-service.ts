@@ -5,6 +5,11 @@ export const TranslationService = Symbol('TranslationService');
 export interface TranslationService {
 
     /**
+     * The service ID
+     */
+    getID(): string;
+
+    /**
      * The name of the translation service
      */
     getServiceName(): string;
