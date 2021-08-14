@@ -43,7 +43,8 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
                     <div className="localizer-horizontal">
                         <h3>{value.key}</h3>
                         {translationServices.map(a => (
-                            <h4 onClick={event => this.onClickTranslate(a, value.key, value.value, 'DE')}>{a.getServiceName()}</h4>
+                            <button className="theia-button localizer-translation-service-btn"
+                                onClick={event => this.onClickTranslate(a, value.key, value.value, 'DE')}>{a.getServiceName()}</button>
                         ))}
                     </div>
 
@@ -99,7 +100,7 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
             console.log('Translation returned ' + value)
         ));
 
-        // TODO: instead of directly invoking translation, show a dialog so user can set source file for source values to be translated 
+        // TODO: instead of directly invoking translation, show a dialog so user can set source file for source values to be translated
         // and display of translation (so user can approve / edit / reject)
     };
 
