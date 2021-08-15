@@ -33,6 +33,7 @@ import { TranslationServiceManager } from './translator/translation-service-mana
 import { TranslationService } from './translator/translation-service';
 import { DeeplTranslationService } from './translator/deepl-translation-service';
 import { bindDeeplPreferences } from './translator/deepl-preferences';
+import { LibreTranslationService } from './translator/libre-translation-service';
 
 export default new ContainerModule(bind => {
     // frontend contribution
@@ -102,6 +103,8 @@ export default new ContainerModule(bind => {
     bind(TranslationService).to(DeeplTranslationService).inSingletonScope();
     // bind DeepL preferences
     bindDeeplPreferences(bind);
+    // bind LibreTranslate service
+    bind(TranslationService).to(LibreTranslationService).inSingletonScope();
 
 });
 
