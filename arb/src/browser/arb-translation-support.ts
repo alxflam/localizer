@@ -105,31 +105,67 @@ export class ArbTranslationSupport implements TranslationSupport {
     }
 
     getTranslationGroups(): TranslationGroup[] {
-        const groupNames = new Set<string>();
+        const result: TranslationGroup[] = [];
+
         for (const resource of this.parseResult.entries()) {
-            let name = resource[1].fileStat.name;
-            const index = name.lastIndexOf('_');
-            if (index > -1) {
-                name = name.substring(0, index);
+            const fileName = resource[1].fileStat.name;
+            const name = this.getGroupNameFromFileName(fileName);
+            const language = this.getLanguageFromFileName(fileName);
+
+            let groupForModification = result.find(a => a.name === name);
+            if (!groupForModification) {
+                groupForModification = <TranslationGroup>{
+                    name: name,
+                    resources: {}
+                };
+                result.push(groupForModification);
             }
-            groupNames.add(name);
+
+            groupForModification.resources[language] = { resource: resource[1].uri};
         }
 
-        // TODO needs to get cleaned up and simplified (directly populate a map name - uri[])
-        // TODO furthermore enhance model with info regarding the language of the resource... (so only th)
-        return Array.from(groupNames).map(a => <TranslationGroup>{
-            name: a,
-            resources: Array.from(this.parseResult.values()).filter(b => b.fileStat.name.includes(a)).map(b => b.uri) });
+        return result;
+   }
+
+   getTranslation(key: string, uri: string): string | undefined {
+    const entries = this.parseResult.entries();
+
+    const resource = Array.from(entries).find(a => a[0].includes(uri));
+
+    if (resource) {
+       const val = resource[1].entries.find(a => a.key === key);
+       if (val) {
+           return val.value;
+       }
+    }
+    return undefined;
+   }
+
+    private getLanguageFromFileName(fileName: string): string {
+            let language = 'unknown';
+            const index = fileName.indexOf('_');
+            if (index > -1) {
+                const suffix = fileName.substring(index, fileName.length);
+                const dotIndex = suffix.lastIndexOf('.');
+                language = suffix.substring(1, dotIndex);
+            }
+            return language;
     }
 
+    private getGroupNameFromFileName(fileName: string): string {
+        let group = 'unknown';
+        const index = fileName.lastIndexOf('_');
+        if (index > -1) {
+            group = fileName.substring(0, index);
+        }
+        return group;
+}
+
     getTranslationKeys(group: TranslationGroup): ITranslationTreeNodeData[] {
-        const keys = new Set();
+        const keys = new Set<string>();
         for (const resource of this.parseResult.entries()) {
-            let name = resource[1].fileStat.name;
-            const index = name.lastIndexOf('_');
-            if (index > -1) {
-                name = name.substring(0, index);
-            }
+            const fileName = resource[1].fileStat.name;
+            const name = this.getGroupNameFromFileName(fileName);
             if (name === group.name) {
                 resource[1].entries.map(item => item.key).forEach(a => keys.add(a));
             }
@@ -144,34 +180,17 @@ export class ArbTranslationSupport implements TranslationSupport {
             data: [],
         };
 
-        // const keys = new Set();
-
         for (const resource of this.parseResult.entries()) {
-            // only process file if its part of the group
-            // TODO: the given group does not contain any URIs
-            // if (group.resources.indexOf(resource[1].uri) < 0) {
-            //     continue;
-            // }
-
             const fileName = resource[1].fileStat.name;
-            let name = fileName;
-            let language = 'unknown';
-            const index = name.lastIndexOf('_');
-            if (index > -1) {
-                name = name.substring(0, index);
-                const suffix = fileName.substring(index, resource[1].fileStat.name.length);
-                const dotIndex = suffix.lastIndexOf('.');
-                language = suffix.substring(1, dotIndex);
-            }
+            const name = this.getGroupNameFromFileName(fileName);
+            const language = this.getLanguageFromFileName(fileName);
 
             // verify group
             if (name !== group.name) {
                 continue;
             }
 
-            // TODO test execution and creation...
             for (const key of resource[1].entries) {
-
                 const keyData = result.data.find(i => i.key === key.key);
                 if (keyData) {
                     keyData.data[language] = key.value;

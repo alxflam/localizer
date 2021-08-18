@@ -48,7 +48,7 @@ export class TranslationManager {
             return [
                 {
                     name: 'Nothing there yet',
-                    resources: []
+                    resources: {}
                 }
             ];
         }
@@ -72,6 +72,15 @@ export class TranslationManager {
         }
 
         return manager.getTranslationEntries(group);
+    }
+
+    getTranslation(key: string, uri: string): string | undefined {
+        const manager = this.getActiveHandler();
+        if (!manager) {
+          throw new Error('No active handler');
+        }
+
+        return manager.getTranslation(key, uri);
     }
 
     private getActiveHandler(): TranslationSupport | undefined {

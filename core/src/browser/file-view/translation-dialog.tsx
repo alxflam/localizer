@@ -12,6 +12,7 @@ export class TranslationDialogProps extends DialogProps {
 
     translationEntry: ITranslationEntry;
     targetLanguage: string;
+    translationKey: string;
 
 }
 
@@ -22,6 +23,7 @@ export class TranslationDialog extends ReactDialog<string> {
             translationServiceManager={this.translationServiceManager}
             preferenceService={this.preferenceService}
             targetLanguage={this.props.targetLanguage}
+            translationKey={this.props.translationKey}
         />;
     }
 
@@ -38,6 +40,7 @@ export class TranslationDialog extends ReactDialog<string> {
     }
 
     get value(): string {
+        // TODO how to get state value?!
         return '';
     }
 

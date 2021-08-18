@@ -9,7 +9,6 @@ import { TranslationResourceParser } from '../../common/parser';
 import { ChangeEventHandler } from '@theia/core/shared/react';
 import { TranslationServiceManager } from '../translator/translation-service-manager';
 import { PreferenceService } from '@theia/core/lib/browser';
-import { TranslationService } from '../translator/translation-service';
 import { TranslationDialog, TranslationDialogProps } from './translation-dialog';
 import { TranslationManager } from '../translation-contribution-manager';
 
@@ -28,12 +27,41 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
 
     render(): JSX.Element | null {
         const { formData } = this.state;
-        const translationServices = this.props.translationServiceManager.getTranslationServices();
         // TODO: get language code, better at construction as won't ever change
         // once componentDidMount got fired we'll have the file content
         // then just parse it
         // and display a form for each entry
         // enhance model: add line to each key entry
+        const groups = this.props.translationManager.getTranslationGroups();
+        // const allTranslations = this.props.translationManager.getTranslationEntries(groups[0]);
+
+        // TODO all that static stuff needs to be done outside of rendering...
+        const resourceUri = this.props.model.uri;
+        const langKeys = Object.keys(groups[0].resources);
+        let resourceLang: string | undefined = undefined;
+        // let comparisonLang: string | undefined = undefined;
+
+        // TODO: extract utility method to translation support
+        for (let index = 0; index < langKeys.length; index++) {
+            const lang = langKeys[index];
+            if (groups[0].resources[lang].resource.toString() === resourceUri) {
+                resourceLang = lang;
+                break;
+            }
+        }
+
+        // for (let index = 0; index < langKeys.length; index++) {
+        //     const lang = langKeys[index];
+        //     if (groups[0].resources[lang].resource.toString() === resourceUri) {
+        //         resourceLang = lang;
+        //     }
+        //     if (resourceLang && lang !== resourceLang) {
+        //         comparisonLang = lang;
+        //         break;
+        //     }
+        //     comparisonLang = lang;
+        // }
+
         let entries: ITranslationEntry[] = [];
         if (formData) {
             entries = this.props.parser.parseByContent(formData);
@@ -43,19 +71,21 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
                 <div key={index}>
                     <div className="localizer-horizontal">
                         <h3>{value.key}</h3>
-                        {translationServices.map(a => (
-                            <button className="theia-button localizer-translation-service-btn"
-                                onClick={event => this.onClickTranslate(a, value, 'DE')}>{a.getServiceName()}</button>
-                        ))}
+                        <button className="theia-button localizer-translation-service-btn"
+                            onClick={event => this.onClickTranslate(value, resourceLang!)}>Translate</button>
                     </div>
 
                     {value.description && value.description.description && value.description.description.length > 0 ?
                         <p>{value.description?.description}</p> : undefined
                     }
 
+                    {/* {comparisonLang ?? allTranslations.data.find(a => a.key === value.key) ?
+                        <p>{comparisonLang}: {allTranslations.data.find(a => a.key === value.key)?.data[comparisonLang!]}</p> : undefined
+                    } */}
+
                     <textarea
                         key={value.key}
-                        className="localizer-translation-input"
+                        className="theia-input localizer-expanded-width localizer-translation-input"
                         value={value.value}
                         placeholder="Translation..."
                         onChange={event => this.onChange(event, value.key)}
@@ -93,18 +123,19 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
         return undefined;
     };
 
-    onClickTranslate(translationService: TranslationService, entry: ITranslationEntry, targetLanguage: string): void {
+    onClickTranslate(entry: ITranslationEntry, targetLanguage: string): void {
         const dialogProperties = {
             title: `Translate ${entry.key} to ${targetLanguage}`,
             translationEntry: entry,
-            targetLanguage: targetLanguage
+            targetLanguage: targetLanguage,
+            translationKey: entry.key
         } as TranslationDialogProps;
 
         const dialog = new TranslationDialog(dialogProperties, this.props.translationServiceManager, this.props.preferenceService, this.props.translationManager);
 
         dialog.open().then(async name => {
             if (name) {
-              // then adapt value
+                // then adapt value
             }
         });
     };

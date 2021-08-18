@@ -17,7 +17,8 @@ export class LibreTranslationService implements TranslationService {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const parameters  = <any>{
             q: value,
-            target: targetLanguage
+            target: targetLanguage,
+            source: sourceLanguage
         };
         if (sourceLanguage) {
             parameters.source = sourceLanguage;
@@ -27,6 +28,8 @@ export class LibreTranslationService implements TranslationService {
             body: JSON.stringify(parameters),
             headers: { 'Content-Type': 'application/json' }
         });
+
+        console.log(response);
 
         if (response.status === 403) {
             throw new Error('Forbidden - Does the mirror now require an API key?');

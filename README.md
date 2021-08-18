@@ -96,5 +96,6 @@ Launch `Start Electron Backend` configuration from VS code.
 - [ ] Add translation providers
     - [X] Deepl
         - [ ] Add support for multi value translation (in single request)
+    - [X] LibreTranslate
     - [ ] Google Translate
 - [ ] Automate electron build using github actions

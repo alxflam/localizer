@@ -3,11 +3,10 @@ html, body {
 }
 
 .localizer-translation-input {
-    background-color: var(--theia-quickInput-background);
-    border: 0;
-    color: var(--theia-foreground);
     font-size: var(--theia-ui-font-size2);
-    padding: 0.5em;
+}
+
+.localizer-expanded-width {
     width: 95%;
 }
 
@@ -28,6 +27,6 @@ html, body {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 }

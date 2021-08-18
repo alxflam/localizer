@@ -28,7 +28,7 @@ export interface ITranslationEntry {
 }
 
 export interface ITranslationKeyDescription {
-    description: string | undefined ;
+    description: string | undefined;
     placeholders: IPlaceholder[];
 }
 
@@ -37,7 +37,11 @@ export interface IPlaceholder {
     description: string;
 }
 
+export interface LanguageResourceMaping {
+    [language: string]: { resource: URI }
+}
+
 export interface TranslationGroup {
     name: string
-    resources: URI[]
+    resources:  LanguageResourceMaping
 }

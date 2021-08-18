@@ -1,18 +1,9 @@
 import * as React from 'react';
-// import { JSONSchema6 } from 'json-schema';
-// import * as jsoncparser from 'jsonc-parser';
-// import { MonacoTextModelService } from '@theia/monaco/lib/browser/monaco-text-model-service';
-// import { MonacoEditorModel } from '@theia/monaco/lib/browser/monaco-editor-model';
-// import { DisposableCollection } from '@theia/core';
-// import { ITranslationEntry } from '../../common/translation-types';
-// import { TranslationResourceParser } from '../../common/parser';
-// import { ChangeEventHandler } from '@theia/core/shared/react';
 import { TranslationServiceManager } from '../translator/translation-service-manager';
 import { PreferenceService } from '@theia/core/lib/browser';
 import { ChangeEvent } from '@theia/core/shared/react';
 import { TranslationManager } from '../translation-contribution-manager';
-// import { TranslationService } from '../translator/translation-service';
-// import { TranslationDialog, TranslationDialogProps } from './translation-dialog';
+import { TranslationGroup } from 'src/common/translation-types';
 
 export namespace TranslationDialogComponent {
     export interface Props {
@@ -20,11 +11,13 @@ export namespace TranslationDialogComponent {
         translationServiceManager: TranslationServiceManager
         preferenceService: PreferenceService
         targetLanguage: string
+        translationKey: string
     }
     export interface State {
         selectedSource: string
         sourceText: string
-        translationService: string // TODO: add id to every service so it can be used as a key
+        translationService: string
+        translatedText: string
     }
 }
 
@@ -35,75 +28,121 @@ export class TranslationDialogComponent extends React.Component<TranslationDialo
         this.state = {
             selectedSource: '',
             sourceText: '',
-            translationService: ''
+            translationService: '',
+            translatedText: ''
         };
 
-        this.handleSourceTextChange = this.handleSourceTextChange.bind(this);
+        this.handleSourceLanguageChange = this.handleSourceLanguageChange.bind(this);
         this.handleTranslationServiceChange = this.handleTranslationServiceChange.bind(this);
+        this.handleSourceTextChanged = this.handleSourceTextChanged.bind(this);
+        this.handleTranslatedTextChanged = this.handleTranslatedTextChanged.bind(this);
     }
 
     render(): JSX.Element | null {
-        //     const test = this.preferenceService;
-        //     console.log(test);
-        //     console.log(this.translationServiceManager);
-        //     const apiKey = this.preferenceService.get<string>(prefDeeplApiKey);
-        //     console.log('Received API Key' + apiKey);
-
-        // translationService.translate(sourceValue, undefined, targetLanguage).then(value => (
-        //     console.log('Translation returned ' + value)
-        // ));
-
-        // render:
-        // dropdown for source entry to be translated
-        // display of the source entry
-        // field for the target language read only
-        // dropdown for selection service
-
         const translationServices = this.props.translationServiceManager.getTranslationServices();
-        const groups = this.props.translationManager.getTranslationGroups();
-        const firstGroup = groups[0];
+        const group = this.getTranslationGroup();
 
         return <>
             <div>
                 <div>
-                    <select className="localizer-select" value={this.state.selectedSource} onChange={this.handleSourceTextChange}>
-                        {firstGroup.resources.map(a => (
-                            <option value={a.path.toString()}>{a.path.name}</option>
+                    <select className="theia-select localizer-expanded-width" value={this.state.selectedSource} onChange={this.handleSourceLanguageChange}>
+                        {Object.keys(group.resources).filter(a => a !== this.props.targetLanguage).map(a => (
+                            <option value={group.resources[a].resource.path.toString()}>{a}</option>
                         ))}
                     </select>
                 </div>
                 <div>
-                    <text>{this.state.sourceText}</text>
+                    <input
+                        key={this.props.translationKey}
+                        className="theia-input localizer-expanded-width localizer-translation-input"
+                        value={this.state.sourceText}
+                        placeholder="Source..."
+                        onChange={event => this.handleSourceTextChanged(event)}
+                    />
                 </div>
                 <div>
                     <text>Target Language:</text>
                     <text>{this.props.targetLanguage}</text>
                 </div>
                 <div>
-                    <select className="localizer-select" value={this.state.translationService} onChange={this.handleTranslationServiceChange}>
+                    <select className="theia-select localizer-expanded-width" value={this.state.translationService} onChange={this.handleTranslationServiceChange}>
                         {translationServices.map(a => (
                             <option value={a.getID()}>{a.getServiceName()}</option>
                         ))}
                     </select>
                 </div>
+                <div>
+                    <button className="theia-button" onClick={event => this.translate()}>Translate</button>
+                </div>
+                <div>
+                    <input
+                        key={this.props.translationKey}
+                        className="theia-input localizer-expanded-width localizer-translation-input"
+                        value={this.state.translatedText}
+                        placeholder=""
+                        onChange={event => this.handleTranslatedTextChanged(event)}
+                    />
+
+                </div>
             </div>
         </>;
     }
 
-    handleTranslationServiceChange(event: ChangeEvent<HTMLSelectElement>): void {
+    private getTranslationGroup(): TranslationGroup {
+        const groups = this.props.translationManager.getTranslationGroups();
+        return groups[0];
+    }
+
+    translate(): void {
+        const translationServices = this.props.translationServiceManager.getTranslationServices();
+        const translator = translationServices.find(a => a.getID() === this.state.translationService);
+        if (translator) {
+            // TODO get selected source language
+            // source language not set initially of not change by user
+            translator.translate(this.state.sourceText, this.state.selectedSource, this.props.targetLanguage).then(value => this.setState(state => ({
+                translatedText: value
+            })));
+        }
+    }
+
+    handleTranslatedTextChanged(event: React.FormEvent<HTMLInputElement>): void {
+        const value = event.currentTarget.value;
         this.setState(state => ({
-            translationService: event.currentTarget.value
+            translatedText: value
         }));
     }
 
-    handleSourceTextChange(event: ChangeEvent<HTMLSelectElement>): void {
+    handleSourceTextChanged(event: React.FormEvent<HTMLInputElement>): void {
+        const value = event.currentTarget.value;
         this.setState(state => ({
-            selectedSource: event.currentTarget.value
+            sourceText: value
+        }));
+    }
+
+    handleTranslationServiceChange(event: ChangeEvent<HTMLSelectElement>): void {
+        const value = event.currentTarget.value;
+        this.setState(state => ({
+            translationService: value
+        }));
+    }
+
+    handleSourceLanguageChange(event: ChangeEvent<HTMLSelectElement>): void {
+        const val = event.currentTarget.value;
+        this.setState(state => ({
+            selectedSource: val,
+            sourceText: this.props.translationManager.getTranslation(this.props.translationKey, val) ?? ''
         }));
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
         console.error(error);
+    }
+
+    componentDidMount(): void {
+        this.setState(state => ({
+            sourceText: this.props.translationManager.getTranslation(this.props.translationKey, this.state.selectedSource) ?? '',
+            selectedSource: Object.keys(this.getTranslationGroup().resources).filter(a => a !== this.props.targetLanguage).find(a => a !== undefined) ?? ''
+        }));
     }
 
 }

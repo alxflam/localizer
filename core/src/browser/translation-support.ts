@@ -49,4 +49,8 @@ export interface TranslationSupport extends ITranslationManager {
     */
     getTranslationEntries(group: TranslationGroup): ITranslationGroupData;
 
+    /*
+     * Returns the translation for a given language
+     */
+    getTranslation(key: string, uri: string): string | undefined;
 }
