@@ -17,14 +17,17 @@ export class TranslationDialogProps extends DialogProps {
 }
 
 export class TranslationDialog extends ReactDialog<string> {
+
+    private component: TranslationDialogComponent | undefined;
+
     protected render(): React.ReactNode {
-        return <TranslationDialogComponent
-            translationManager={this.translationManager}
-            translationServiceManager={this.translationServiceManager}
-            preferenceService={this.preferenceService}
-            targetLanguage={this.props.targetLanguage}
-            translationKey={this.props.translationKey}
-        />;
+       return <TranslationDialogComponent
+       translationManager={this.translationManager}
+       translationServiceManager={this.translationServiceManager}
+       preferenceService={this.preferenceService}
+       targetLanguage={this.props.targetLanguage}
+       translationKey={this.props.translationKey}
+       ref={comp => this.component = comp ?? undefined} />;
     }
 
     constructor(
@@ -36,11 +39,14 @@ export class TranslationDialog extends ReactDialog<string> {
         super({
             title: props.title,
         });
-        this.appendAcceptButton('Ok');
+        this.appendCloseButton('Cancel');
+        this.appendAcceptButton('Apply');
     }
 
     get value(): string {
-        // TODO how to get state value?!
+        if (this.component) {
+            return this.component.getResult();
+        }
         return '';
     }
 

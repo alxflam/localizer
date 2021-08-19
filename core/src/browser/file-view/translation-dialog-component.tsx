@@ -88,6 +88,10 @@ export class TranslationDialogComponent extends React.Component<TranslationDialo
         </>;
     }
 
+    public getResult(): string {
+        return this.state.translatedText;
+    }
+
     private getTranslationGroup(): TranslationGroup {
         const groups = this.props.translationManager.getTranslationGroups();
         return groups[0];

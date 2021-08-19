@@ -100,9 +100,16 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
         // TODO add params, update internal model - this.state.formData (how..create json and replace?), then on save only trigger persistence?
         const val = event.currentTarget.value;
         console.log(val);
+
+        this.updateTranslation(key, val);
+
+        return undefined;
+    };
+
+    updateTranslation(key: string, value: string): void {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { formData } = this.state as any;
-        formData[key] = val;
+        formData[key] = value;
 
         // then modify form data using new value
         const model = this.props.model.textEditorModel;
@@ -110,7 +117,7 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
         const formattingOptions = { tabSize: 2, insertSpaces: true, eol: '' };
 
         // modify the single changed key
-        const edits = jsoncparser.modify(content, [key], val, { formattingOptions });
+        const edits = jsoncparser.modify(content, [key], value, { formattingOptions });
         model.applyEdits(edits.map(e => {
             const start = model.getPositionAt(e.offset);
             const end = model.getPositionAt(e.offset + e.length);
@@ -119,9 +126,7 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
                 text: e.content
             };
         }));
-
-        return undefined;
-    };
+    }
 
     onClickTranslate(entry: ITranslationEntry, targetLanguage: string): void {
         const dialogProperties = {
@@ -133,9 +138,9 @@ export class TranslationFileView extends React.Component<TranslationFileView.Pro
 
         const dialog = new TranslationDialog(dialogProperties, this.props.translationServiceManager, this.props.preferenceService, this.props.translationManager);
 
-        dialog.open().then(async name => {
-            if (name) {
-                // then adapt value
+        dialog.open().then(async result => {
+            if (result) {
+                this.updateTranslation(entry.key, result);
             }
         });
     };
