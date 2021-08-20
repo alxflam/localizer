@@ -1,4 +1,4 @@
-import { CompositeTreeNode, ExpandableTreeNode, SelectableTreeNode, TreeImpl, TreeNode } from '@theia/core/lib/browser';
+import { CompositeTreeNode, DecoratedTreeNode, ExpandableTreeNode, SelectableTreeNode, TreeDecoration, TreeImpl, TreeNode } from '@theia/core/lib/browser';
 import { injectable, inject } from 'inversify';
 import { ITranslationTreeNodeData, TranslationGroup } from '../../common/translation-types';
 import { TranslationManager } from '../translation-contribution-manager';
@@ -55,7 +55,19 @@ export class TranslationNavigatorTree extends TreeImpl {
             id: id,
             parent: parent,
             key: key.key,
-            selected: false
+            selected: false,
+            decorationData: {
+                badge: 1,
+                tailDecorations: [
+                    {
+                        data: '1',
+                        fontData: {
+                            color: 'red'
+                        } as TreeDecoration.FontData
+                    } as TreeDecoration.TailDecoration
+                ],
+                tooltip: 'Number of languages'
+            }
         } as TranslationKeyNode;
     }
 
@@ -135,7 +147,7 @@ export namespace TranslationGroupRootNode {
     }
 }
 
-export interface TranslationKeyNode extends SelectableTreeNode {
+export interface TranslationKeyNode extends SelectableTreeNode, DecoratedTreeNode {
     key: string;
 }
 export namespace TranslationKeyNode {

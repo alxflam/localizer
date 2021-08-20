@@ -27,7 +27,6 @@ import { TranslationTreeLabelProvider } from './tree/translation-tree-label-prov
 import { TranslationViewWidget, TRANSLATION_VIEW_ID } from './translation-view/translation-view-widget';
 import URI from '@theia/core/lib/common/uri';
 import { TranslationViewContribution } from './translation-view/translation-view-contribution';
-
 import '../../src/browser/style/index.css';
 import { TranslationServiceManager } from './translator/translation-service-manager';
 import { TranslationService } from './translator/translation-service';

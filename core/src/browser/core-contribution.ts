@@ -134,10 +134,11 @@ export class CoreContribution implements FrontendApplicationContribution {
     }
 
     async onStart(app: FrontendApplication): Promise<void> {
-
         console.log('started core');
 
-        // open arb translation if arb file is opened in editor
+        /**
+         * Open arb translation if arb file is opened in editor
+         */
         app.shell.onDidAddWidget(widget => {
             if (widget instanceof EditorWidget) {
                 const { editor } = widget;
