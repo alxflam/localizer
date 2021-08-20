@@ -57,7 +57,6 @@ export class TranslationNavigatorTree extends TreeImpl {
             key: key.key,
             selected: false,
             decorationData: {
-                badge: 1,
                 tailDecorations: [
                     {
                         data: '1',
@@ -79,6 +78,8 @@ export class TranslationNavigatorTree extends TreeImpl {
     protected toGroupRootNode(group: TranslationGroup, workspaceNode: TranslationTreeRootNode): TreeNode {
         const id = this.toNodeId(group, workspaceNode);
         const node = this.getNode(id);
+        const languageKeys = Object.keys(group.resources);
+        const languagesTooltip = languageKeys.join(', ');
         if (TranslationGroupRootNode.is(node)) {
             return node;
         } else {
@@ -88,7 +89,15 @@ export class TranslationNavigatorTree extends TreeImpl {
                 group: group,
                 visible: true,
                 expanded: false,
-                children: []
+                children: [],
+                decorationData: {
+                    tailDecorations: [
+                        {
+                            data: languageKeys.length.toString(),
+                            tooltip: languagesTooltip,
+                        } as TreeDecoration.TailDecoration
+                    ]
+                }
             } as TranslationGroupRootNode;
 
             return groupRootNode;
@@ -127,7 +136,7 @@ export namespace TranslationTreeRootNode {
 /*
 * Root node of a translation group
 */
-export interface TranslationGroupRootNode extends ExpandableTreeNode {
+export interface TranslationGroupRootNode extends ExpandableTreeNode, DecoratedTreeNode {
     group: TranslationGroup;
 }
 
