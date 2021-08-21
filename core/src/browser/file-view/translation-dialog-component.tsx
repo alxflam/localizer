@@ -143,9 +143,13 @@ export class TranslationDialogComponent extends React.Component<TranslationDialo
     }
 
     componentDidMount(): void {
+        const translationServices = this.props.translationServiceManager.getTranslationServices();
+        const initialTranslationService = translationServices.length > 0 ? translationServices[0].getID() : '';
+        const initialSourceLanguage = Object.keys(this.getTranslationGroup().resources).filter(a => a !== this.props.targetLanguage).find(a => a !== undefined) ?? '';
         this.setState(state => ({
-            sourceText: this.props.translationManager.getTranslation(this.props.translationKey, this.state.selectedSource) ?? '',
-            selectedSource: Object.keys(this.getTranslationGroup().resources).filter(a => a !== this.props.targetLanguage).find(a => a !== undefined) ?? ''
+            sourceText: this.props.translationManager.getTranslation(this.props.translationKey, initialSourceLanguage) ?? '',
+            selectedSource: initialSourceLanguage,
+            translationService: initialTranslationService
         }));
     }
 
