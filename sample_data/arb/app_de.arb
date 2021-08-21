@@ -1,7 +1,7 @@
 {
 	"@@locale": "de",
-	"aSimpleText": "This is just a simple translation key",
-	"servings": "{count,plural, =1{Serving}other{Servings}}",
-	"confirmDelete": "Do you really want to delete {topic}?",
-	"confirmLeave": "Do you really want to leave {name}?"
+	"aSimpleText": "Ein einfacher Text",
+	"servings": "{count,plural, =1{Portion}other{Portionen}}",
+	"confirmDelete": "Soll {topic} wirklich gelöscht werden?",
+	"confirmLeave": "{name} wirklich verlassen?"
 }
