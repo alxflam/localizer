@@ -46,9 +46,10 @@ export class TranslationNavigatorTree extends TreeImpl {
 
     protected toKeyNode(translationEntry: ITranslationEntryRoot, parent: TranslationGroupRootNode): TreeNode {
         const id = parent.id + '/' + translationEntry.key;
-        const labguageKeys = Object.keys(translationEntry.data);
-        const languages = labguageKeys.length.toString();
-        const languagesTooltip = labguageKeys.join(', ');
+        const languageKeys = Object.keys(translationEntry.data);
+        const languages = languageKeys.length.toString();
+        const languagesTooltip = languageKeys.join(', ');
+        const allLanguages = Object.keys(parent.group.resources);
 
         const node = this.getNode(id);
 
@@ -64,12 +65,12 @@ export class TranslationNavigatorTree extends TreeImpl {
                 tailDecorations: [
                     {
                         data: languages,
+                        tooltip: languagesTooltip,
                         fontData: {
-                            color: 'green'
+                            color: languageKeys.length < allLanguages.length ? 'red' : 'green'
                         } as TreeDecoration.FontData
                     } as TreeDecoration.TailDecoration
                 ],
-                tooltip: languagesTooltip
             }
         } as TranslationKeyNode;
     }
