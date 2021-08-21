@@ -1,6 +1,6 @@
 import { CompositeTreeNode, DecoratedTreeNode, ExpandableTreeNode, SelectableTreeNode, TreeDecoration, TreeImpl, TreeNode } from '@theia/core/lib/browser';
 import { injectable, inject } from 'inversify';
-import { ITranslationTreeNodeData, TranslationGroup } from '../../common/translation-types';
+import { ITranslationEntryRoot, TranslationGroup } from '../../common/translation-types';
 import { TranslationManager } from '../translation-contribution-manager';
 
 // was previously extends TranslationTree
@@ -24,9 +24,8 @@ export class TranslationNavigatorTree extends TreeImpl {
         }
 
         if (TranslationGroupRootNode.is(parent)) {
-            // lazily query the service for translation keys
-            const keys = this.translationManager.getTranslationKeys(parent.group);
-            return Promise.resolve(keys.map(key => this.createTranslationKeyNode(key, parent)));
+            const data = this.translationManager.getTranslationEntries(parent.group);
+            return Promise.resolve(data.data.map(key => this.createTranslationKeyNode(key, parent)));
         }
 
         if (TranslationKeyNode.is(parent)) {
@@ -40,32 +39,37 @@ export class TranslationNavigatorTree extends TreeImpl {
         return group.name;
     }
 
-    public createTranslationKeyNode(group: ITranslationTreeNodeData, parent: TranslationGroupRootNode): TreeNode {
-        const node = this.toKeyNode(group, parent);
+    public createTranslationKeyNode(key: ITranslationEntryRoot, parent: TranslationGroupRootNode): TreeNode {
+        const node = this.toKeyNode(key, parent);
         return node;
     }
 
-    protected toKeyNode(key: ITranslationTreeNodeData, parent: TranslationGroupRootNode): TreeNode {
-        const id = parent.id + '/' + key.key;
+    protected toKeyNode(translationEntry: ITranslationEntryRoot, parent: TranslationGroupRootNode): TreeNode {
+        const id = parent.id + '/' + translationEntry.key;
+        const labguageKeys = Object.keys(translationEntry.data);
+        const languages = labguageKeys.length.toString();
+        const languagesTooltip = labguageKeys.join(', ');
+
         const node = this.getNode(id);
+
         if (node) {
             return node;
         }
         return {
             id: id,
             parent: parent,
-            key: key.key,
+            key: translationEntry.key,
             selected: false,
             decorationData: {
                 tailDecorations: [
                     {
-                        data: '1',
+                        data: languages,
                         fontData: {
-                            color: 'red'
+                            color: 'green'
                         } as TreeDecoration.FontData
                     } as TreeDecoration.TailDecoration
                 ],
-                tooltip: 'Number of languages'
+                tooltip: languagesTooltip
             }
         } as TranslationKeyNode;
     }
