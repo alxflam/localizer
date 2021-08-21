@@ -86,16 +86,16 @@ Launch `Start Electron Backend` configuration from VS code.
 - [X] Translation file view should itself provide a dirty state and be saveable
 - [X] Basic styling for input fields in file view
 - [ ] Add new language resource
+- [ ] Add missing translation keys
 - [ ] Translation file view should display key metadata
+    - [X] Display description if present
 - [ ] Translation Preview should allow editing
-- [ ] Translation Group View should display all translations dynamically
-    - [ ] add editing
-- [ ] Translation Navigator should indicate status
-    - [ ] translated, missing translation, and their counts
+- [X] Translation Group View should display all translations dynamically
+- [ ] Group View: Add editing
+- [X] Translation Navigator should indicate status
+    - [X] translated, missing translation, and their counts
 - [ ] Navigator double-click should open translation dialog for selected key
-- [ ] Add translation providers
+- [X] Add translation providers
     - [X] Deepl
-        - [ ] Add support for multi value translation (in single request)
     - [X] LibreTranslate
-    - [ ] Google Translate
 - [ ] Automate electron build using github actions
