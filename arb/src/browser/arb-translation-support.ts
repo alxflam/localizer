@@ -209,4 +209,13 @@ export class ArbTranslationSupport implements TranslationSupport {
 
         return result;
     }
+
+    getTranslationEntry(group: TranslationGroup, key: string): ITranslationEntryRoot {
+        const keys = this.getTranslationEntries(group);
+        const result = keys.data.find(a => a.key === key);
+        if (result) {
+            return result;
+        }
+        throw new Error('Key not found');
+    }
 }

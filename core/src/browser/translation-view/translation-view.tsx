@@ -55,7 +55,7 @@ export class TranslationView extends React.Component<TranslationView.Props, Tran
                                             <input
                                                 key={lang + '.' + value.key}
                                                 type="text"
-                                                className="form-control"
+                                                className="theia-input localizer-expanded-width localizer-translation-input"
                                                 defaultValue={val}
                                                 // try like that: onChange={evt => this.updateInputValue(evt)}
                                                 onChange={this.onChange} />

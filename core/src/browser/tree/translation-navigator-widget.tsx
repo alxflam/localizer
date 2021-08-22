@@ -1,9 +1,9 @@
+import * as React from 'react';
 import { injectable, inject } from 'inversify';
 import { ContextMenuRenderer, TreeProps, ViewContainerTitleOptions, ApplicationShell, TreeModel, TreeWidget } from '@theia/core/lib/browser';
 import { TranslationNavigatorModel } from './translation-navigator-model';
 import { SelectionService } from '@theia/core';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
-import * as React from 'react';
 
 export const TRANSLATION_NAVIGATOR_ID = 'translation';
 export const TRANSLATION_VIEW_CONTAINER_ID = 'translation-view-container';
@@ -35,7 +35,7 @@ export class TranslationNavigatorWidget extends TreeWidget {
         this.title.closable = true;
     }
 
-    protected renderTree(model: TreeModel): React.ReactNode {
+    protected override renderTree(model: TreeModel): React.ReactNode {
         return this.model.root === undefined
             ? this.renderOpenWorkspaceDiv()
             : super.renderTree(model);

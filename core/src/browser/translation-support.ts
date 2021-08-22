@@ -1,7 +1,7 @@
 import { MaybePromise } from '@theia/core';
 import URI from '@theia/core/lib/common/uri';
 import { TranslationResourceParser } from '../common/parser';
-import { ITranslationGroupData, ITranslationTreeNodeData, TranslationGroup } from '../common/translation-types';
+import { ITranslationEntryRoot, ITranslationGroupData, ITranslationTreeNodeData, TranslationGroup } from '../common/translation-types';
 import { ITranslationManager } from './translation-manager';
 
 /**
@@ -48,6 +48,8 @@ export interface TranslationSupport extends ITranslationManager {
     * Returns the data of the given translation group: translation keys, the available languages and the corresponding translation values.
     */
     getTranslationEntries(group: TranslationGroup): ITranslationGroupData;
+
+    getTranslationEntry(group: TranslationGroup, key: string): ITranslationEntryRoot;
 
     /*
      * Returns the translation for a given language

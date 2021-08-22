@@ -1,7 +1,7 @@
 import { ContributionProvider } from '@theia/core';
 import URI from '@theia/core/lib/common/uri';
 import { injectable, inject, named } from 'inversify';
-import { ITranslationGroupData, ITranslationTreeNodeData, TranslationGroup } from '../common/translation-types';
+import { ITranslationEntryRoot, ITranslationGroupData, ITranslationTreeNodeData, TranslationGroup } from '../common/translation-types';
 import { TranslationSupport } from './translation-support';
 
 @injectable()
@@ -72,6 +72,15 @@ export class TranslationManager {
         }
 
         return manager.getTranslationEntries(group);
+    }
+
+    getTranslationEntry(group: TranslationGroup, key: string): ITranslationEntryRoot {
+        const manager = this.getActiveHandler();
+        if (!manager) {
+          throw new Error('No active handler');
+        }
+
+        return manager.getTranslationEntry(group, key);
     }
 
     getTranslation(key: string, uri: string): string | undefined {
