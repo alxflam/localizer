@@ -73,6 +73,10 @@ Start watching of the electron example.
 
 Launch `Start Electron Backend` configuration from VS code.
 
+## Troubleshooting
+
+yarn rebuild:browser && yarn rebuild:electron
+
 ##  TODO
 
 - [X] Seperate packages into core, branding and format specific implementations, e.g. arb
