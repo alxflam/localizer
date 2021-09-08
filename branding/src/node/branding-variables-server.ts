@@ -10,7 +10,7 @@ export class LocalizerEnvVariableServer extends EnvVariablesServerImpl {
     /**
      * The configuration directory name should not be the default .theia
      */
-     protected override async createConfigDirUri(): Promise<string> {
+    protected override async createConfigDirUri(): Promise<string> {
         return FileUri.create(path.join(os.homedir(), '.localizer')).toString();
     }
 

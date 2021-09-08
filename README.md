@@ -89,6 +89,7 @@ yarn rebuild:browser && yarn rebuild:electron
 - [X] Use a custom configuration drectory instead of .theia
 - [X] Translation file view should itself provide a dirty state and be saveable
 - [X] Basic styling for input fields in file view
+- [ ] Use codicons instead of fontawesome icons once PR has landed
 - [ ] Add new language resource
 - [ ] Add missing translation keys
 - [ ] Translation file view should display key metadata
