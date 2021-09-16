@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "browser-app",
+  "license": "EPL-2.0",
   "version": "0.0.0",
   "dependencies": {
     "@theia/core": "latest",
