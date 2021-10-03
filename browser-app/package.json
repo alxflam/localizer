@@ -4,24 +4,24 @@
   "license": "EPL-2.0",
   "version": "0.0.0",
   "dependencies": {
+    "@localizer/arb": "0.0.0",
+    "@localizer/branding": "0.0.0",
+    "@localizer/core": "0.0.0",
     "@theia/core": "latest",
     "@theia/editor": "latest",
     "@theia/filesystem": "latest",
+    "@theia/git": "latest",
     "@theia/markers": "latest",
     "@theia/messages": "latest",
+    "@theia/mini-browser": "latest",
     "@theia/monaco": "latest",
     "@theia/navigator": "latest",
+    "@theia/plugin-ext": "latest",
+    "@theia/plugin-ext-vscode": "latest",
     "@theia/preferences": "latest",
     "@theia/process": "latest",
     "@theia/terminal": "latest",
-    "@theia/workspace": "latest",
-    "@theia/plugin-ext-vscode": "latest",
-    "@theia/plugin-ext": "latest",
-    "@theia/mini-browser": "latest",
-    "@theia/git": "latest",
-    "@localizer/core": "0.0.0",
-    "@localizer/branding": "0.0.0",
-    "@localizer/arb": "0.0.0"
+    "@theia/workspace": "latest"
   },
   "devDependencies": {
     "@theia/cli": "latest"
@@ -36,9 +36,7 @@
     "frontend": {
       "config": {
         "applicationName": "Localizer",
-        "preferences": {
-          
-        }
+        "preferences": {}
       }
     }
   }
