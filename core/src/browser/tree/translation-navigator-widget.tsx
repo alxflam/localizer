@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { injectable, inject } from 'inversify';
-import { ContextMenuRenderer, TreeProps, ViewContainerTitleOptions, ApplicationShell, TreeModel, TreeWidget } from '@theia/core/lib/browser';
+import { ContextMenuRenderer, TreeProps, ViewContainerTitleOptions, ApplicationShell, TreeModel, TreeWidget, codicon } from '@theia/core/lib/browser';
 import { TranslationNavigatorModel } from './translation-navigator-model';
 import { SelectionService } from '@theia/core';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
@@ -9,7 +9,6 @@ export const TRANSLATION_NAVIGATOR_ID = 'translation';
 export const TRANSLATION_VIEW_CONTAINER_ID = 'translation-view-container';
 export const TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
     label: 'Translation',
-    iconClass: 'fa fa-globe', // 'navigator-tab-icon',
     closeable: true
 };
 
@@ -18,6 +17,8 @@ export const CLASS = 'localizer-Translation';
 
 @injectable()
 export class TranslationNavigatorWidget extends TreeWidget {
+
+    static ICON = codicon('globe');
 
     constructor(
         @inject(TreeProps) readonly props: TreeProps,
@@ -31,7 +32,7 @@ export class TranslationNavigatorWidget extends TreeWidget {
         this.id = TRANSLATION_NAVIGATOR_ID;
         this.title.label = TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS.label;
         this.title.caption = TRANSLATION_VIEW_CONTAINER_TITLE_OPTIONS.label;
-        this.title.iconClass = 'fa fa-globe';
+        this.title.iconClass = TranslationNavigatorWidget.ICON;
         this.title.closable = true;
     }
 

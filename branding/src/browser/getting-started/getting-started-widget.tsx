@@ -1,10 +1,12 @@
 import { injectable, postConstruct } from 'inversify';
 import { GettingStartedWidget } from '@theia/getting-started/lib/browser/getting-started-widget';
 import React = require('react');
+import { codicon } from '@theia/core/lib/browser';
 
 @injectable()
 export class LocalizerGettingStartedWidget extends GettingStartedWidget {
 
+    static QUESTION_ICON = codicon('question');
     /**
      * Repository link
      */
@@ -22,7 +24,7 @@ export class LocalizerGettingStartedWidget extends GettingStartedWidget {
     protected renderHelp(): React.ReactNode {
         return <div className='gs-section'>
             <h3 className='gs-section-header'>
-                <i className='fa fa-question-circle'></i>
+                <i className={LocalizerGettingStartedWidget.QUESTION_ICON}></i>
                 Help
             </h3>
             <div className='gs-action-container'>
