@@ -1,12 +1,12 @@
 {
   "private": true,
-  "name": "browser-app",
+  "name": "localizer",
   "license": "EPL-2.0",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
-    "@localizer/arb": "0.0.0",
-    "@localizer/branding": "0.0.0",
-    "@localizer/core": "0.0.0",
+    "@localizer/arb": "0.0.1",
+    "@localizer/branding": "0.0.1",
+    "@localizer/core": "0.0.1",
     "@theia/core": "latest",
     "@theia/editor": "latest",
     "@theia/filesystem": "latest",
