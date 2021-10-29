@@ -79,28 +79,10 @@ yarn rebuild:browser && yarn rebuild:electron
 
 ##  TODO
 
-- [X] Seperate packages into core, branding and format specific implementations, e.g. arb
-- [X] Change applicatonName from default
-- [X] Add git extension to app
-- [X] Reuse @theia/getting-started extension for branding extension
-- [X] Clean up Getting Started page
-- [X] Provide electron build for linux
-- [X] Provide GH action for linting
-- [X] Use a custom configuration drectory instead of .theia
-- [X] Translation file view should itself provide a dirty state and be saveable
-- [X] Basic styling for input fields in file view
-- [ ] Use codicons instead of fontawesome icons once PR has landed
 - [ ] Add new language resource
 - [ ] Add missing translation keys
 - [ ] Translation file view should display key metadata
-    - [X] Display description if present
 - [ ] Translation Preview should allow editing
-- [X] Translation Group View should display all translations dynamically
 - [ ] Group View: Add editing
-- [X] Translation Navigator should indicate status
-    - [X] translated, missing translation, and their counts
 - [ ] Navigator double-click should open translation dialog for selected key
-- [X] Add translation providers
-    - [X] Deepl
-    - [X] LibreTranslate
 - [ ] Automate electron build using github actions
